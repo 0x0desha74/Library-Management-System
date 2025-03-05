@@ -1,5 +1,6 @@
 
 using Bookly.APIs.Data;
+using Bookly.APIs.Helpers;
 using Bookly.APIs.Interfaces;
 using Bookly.APIs.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ namespace Bookly.APIs
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+            builder.Services.AddAutoMapper(typeof(MappingProfiles));
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection String Not Found");

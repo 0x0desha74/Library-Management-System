@@ -20,9 +20,9 @@ namespace Bookly.APIs.Repositories
             return await _dbContext.Set<T>().ToListAsync();
         }
 
-        public Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecification<T> spec)
+        public async Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecification<T> spec)
         {
-            throw new NotImplementedException();
+            return await ApplySpecification(spec).ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(int id)
@@ -30,16 +30,10 @@ namespace Bookly.APIs.Repositories
             return await _dbContext.Set<T>().FindAsync(id);
         }
 
-        public Task<T> GetEntityWithSpecAsync(ISpecification<T> spec)
+        public async Task<T> GetEntityWithSpecAsync(ISpecification<T> spec)
         {
-            throw new NotImplementedException();
+            return await ApplySpecification(spec).FirstOrDefaultAsync();
         }
-
-
-
-
-
-
 
         public async Task AddAsync(T entity)
         {
@@ -56,6 +50,12 @@ namespace Bookly.APIs.Repositories
         public void UpdateAsync(T entity)
         {
             _dbContext.Set<T>().Update(entity);
+        }
+
+
+        public IQueryable<T> ApplySpecification(ISpecification<T> spec)
+        {
+            return SpecificationEvaluator<T>.GetQuery(_dbContext.Set<T>(), spec);
         }
     }
 }
