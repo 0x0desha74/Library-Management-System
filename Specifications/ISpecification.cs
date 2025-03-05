@@ -1,6 +1,6 @@
 ﻿namespace Bookly.APIs.Specifications
 {
-    public interface ISpecification
+    public interface ISpecification<T>
     {
 
     }
