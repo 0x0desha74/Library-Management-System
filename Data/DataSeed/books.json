@@ -1,0 +1,92 @@
+[
+  {
+    "Title": "The Great Gatsby",
+    "Description": "A story of the fabulously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan.",
+    "AuthorId": 1,
+    "PublishedDate": "1925-04-10",
+    "Genre": "Fiction",
+    "TotalCount": 10,
+    "AvailableCount": 8
+  },
+  {
+    "Title": "Harry Potter and the Philosopher's Stone",
+    "Description": "The first book in the Harry Potter series, following the adventures of a young wizard.",
+    "AuthorId": 2, 
+    "PublishedDate": "1997-06-26",
+    "Genre": "Fantasy",
+    "TotalCount": 15,
+    "AvailableCount": 12
+  },
+  {
+    "Title": "1984",
+    "Description": "A dystopian novel set in a totalitarian society ruled by the Party and its leader, Big Brother.",
+    "AuthorId": 3, 
+    "PublishedDate": "1949-06-08",
+    "Genre": "Dystopian",
+    "TotalCount": 20,
+    "AvailableCount": 18
+  },
+  {
+    "Title": "Pride and Prejudice",
+    "Description": "A romantic novel of manners that follows the character development of Elizabeth Bennet.",
+    "AuthorId": 4, 
+    "PublishedDate": "1813-01-28",
+    "Genre": "Romance",
+    "TotalCount": 12,
+    "AvailableCount": 10
+  },
+  {
+    "Title": "The Catcher in the Rye",
+    "Description": "A novel about the teenage protagonist Holden Caulfield and his struggles with identity and belonging.",
+    "AuthorId": 1,
+    "PublishedDate": "1951-07-16",
+    "Genre": "Literary Fiction",
+    "TotalCount": 8,
+    "AvailableCount": 6
+  },
+  {
+    "Title": "Harry Potter and the Chamber of Secrets",
+    "Description": "The second book in the Harry Potter series, where Harry returns to Hogwarts for his second year.",
+    "AuthorId": 2,
+    "PublishedDate": "1998-07-02",
+    "Genre": "Fantasy",
+    "TotalCount": 14,
+    "AvailableCount": 11
+  },
+  {
+    "Title": "Animal Farm",
+    "Description": "A satirical allegory of Soviet totalitarianism, where farm animals overthrow their human owner.",
+    "AuthorId": 3,
+    "PublishedDate": "1945-08-17",
+    "Genre": "Satire",
+    "TotalCount": 18,
+    "AvailableCount": 15
+  },
+  {
+    "Title": "Sense and Sensibility",
+    "Description": "A novel about the Dashwood sisters and their romantic struggles in early 19th-century England.",
+    "AuthorId": 4,
+    "PublishedDate": "1811-10-30",
+    "Genre": "Romance",
+    "TotalCount": 10,
+    "AvailableCount": 9
+  },
+  {
+    "Title": "Tender Is the Night",
+    "Description": "A novel about the rise and fall of Dick Diver, a promising young psychiatrist, and his wife Nicole.",
+    "AuthorId": 1, 
+    "PublishedDate": "1934-04-12",
+    "Genre": "Fiction",
+    "TotalCount": 7,
+    "AvailableCount": 5
+  },
+  {
+    "Title": "Harry Potter and the Prisoner of Azkaban",
+    "Description": "The third book in the Harry Potter series, where Harry learns more about his past and faces new dangers.",
+    "AuthorId": 2, 
+    "PublishedDate": "1999-07-08",
+    "Genre": "Fantasy",
+    "TotalCount": 16,
+    "AvailableCount": 13
+  }
+]

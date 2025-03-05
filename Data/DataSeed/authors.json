@@ -1,0 +1,26 @@
+[
+  {
+    "Name": "F. Scott Fitzgerald",
+    "Bio": "American novelist and short-story writer.",
+    "BirthDate": "1896-09-24",
+    "DeathDate": "1940-12-21"
+  },
+  {
+    "Name": "J.K. Rowling",
+    "Bio": "British author best known for the Harry Potter series.",
+    "BirthDate": "1965-07-31",
+    "DeathDate": null
+  },
+  {
+    "Name": "George Orwell",
+    "Bio": "English novelist, essayist, and critic.",
+    "BirthDate": "1903-06-25",
+    "DeathDate": "1950-01-21"
+  },
+  {
+    "Name": "Jane Austen",
+    "Bio": "English novelist known for her romantic fiction.",
+    "BirthDate": "1775-12-16",
+    "DeathDate": "1817-07-18"
+  }
+]
