@@ -12,8 +12,8 @@ namespace Bookly.APIs.Interfaces
         Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecification<T> spec);
         Task<T> GetEntityWithSpecAsync(ISpecification<T> spec);
         Task AddAsync(T entity);
-        void UpdateAsync(T entity);
-        void DeleteAsync(T entity);
+        void Update(T entity);
+        void Delete(T entity);
 
     }
 }

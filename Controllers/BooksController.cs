@@ -37,5 +37,33 @@ namespace Bookly.APIs.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<ActionResult<BookDto>> Create(BookDto model)
+        {
+            var mappedBook = _mapper.Map<BookDto, Book>(model);
+            await _unitOfWork.Repository<Book>().AddAsync(mappedBook);
+            await _unitOfWork.Complete();
+            return Ok(model);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<BookDto>> Edit(BookDto model)
+        {
+           var mappedBook= _mapper.Map<BookDto, Book>(model);
+            _unitOfWork.Repository<Book>().Update(mappedBook);
+            await _unitOfWork.Complete();
+            return Ok(model);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<DeletedMessageDto>> Delete(int id)
+        {
+            var book = await _unitOfWork.Repository<Book>().GetByIdAsync(id);
+            _unitOfWork.Repository<Book>().Delete(book);
+            await _unitOfWork.Complete();
+            return Ok(new DeletedMessageDto("Book is deleted successfully"));
+        }
+
+
     }
 }
