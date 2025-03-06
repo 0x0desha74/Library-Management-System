@@ -3,7 +3,6 @@ using Bookly.APIs.DTOs;
 using Bookly.APIs.Entities;
 using Bookly.APIs.Interfaces;
 using Bookly.APIs.Specifications;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bookly.APIs.Controllers
