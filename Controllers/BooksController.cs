@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bookly.APIs.DTOs;
 using Bookly.APIs.Entities;
+using Bookly.APIs.Error;
 using Bookly.APIs.Interfaces;
 using Bookly.APIs.Specifications;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +33,7 @@ namespace Bookly.APIs.Controllers
         {
             var spec = new BookWithAuthorsSpecification(id);
             var book = await _unitOfWork.Repository<Book>().GetEntityWithSpecAsync(spec);
-            return book is not null ? Ok(_mapper.Map<Book,BookToReturnDto>(book)) : NotFound();
+            return book is not null ? Ok(_mapper.Map<Book,BookToReturnDto>(book)) : NotFound(new ApiResponse(404));
         }
 
 

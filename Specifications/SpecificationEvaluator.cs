@@ -10,7 +10,7 @@ namespace Bookly.APIs.Specifications
             var query = inputQuery;
 
             if (spec.Criteria is not null)
-                query.Where(spec.Criteria);
+               query= query.Where(spec.Criteria);
 
 
 

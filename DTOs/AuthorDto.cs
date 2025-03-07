@@ -1,13 +1,10 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Bookly.APIs.Entities
+﻿namespace Bookly.APIs.DTOs
 {
-    public class Author : BaseEntity
+    public class AuthorDto
     {
         public string Name { get; set; }
         public string? Bio { get; set; }
         public DateOnly BirthDate { get; set; }
         public DateOnly? DeathDate { get; set; }
-        public ICollection<Book> Books { get; set; } = new HashSet<Book>();
     }
 }
