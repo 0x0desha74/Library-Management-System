@@ -48,5 +48,27 @@ namespace Bookly.APIs.Controllers
 
         }
 
+        [HttpPut]
+        public async Task<ActionResult<Author>> Edit(AuthorDto model)
+        {
+            var author = _mapper.Map<AuthorDto, Author>(model);
+            _unitOfWork.Repository<Author>().Update(author);
+            var result = await _unitOfWork.Complete();
+            if (result == 0) return BadRequest(new ApiResponse(400));
+            return Ok(author);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<DeletedMessageDto>> Delete(int id)
+        {
+            var spec = new AuthorWithSpecSpecifications(id);
+            var author = await _unitOfWork.Repository<Author>().GetEntityWithSpecAsync(spec);
+            _unitOfWork.Repository<Author>().Delete(author);
+            var result = await _unitOfWork.Complete();
+            if (result == 0) return BadRequest(new ApiResponse(400));
+            return Ok(new DeletedMessageDto("Author was Deleted Successfully"));
+            
+        }
+
     }
 }
