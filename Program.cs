@@ -1,7 +1,9 @@
 
 using Bookly.APIs.Data;
+using Bookly.APIs.Extensions;
 using Bookly.APIs.Helpers;
 using Bookly.APIs.Interfaces;
+using Bookly.APIs.Middlewares;
 using Bookly.APIs.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,8 +21,11 @@ namespace Bookly.APIs
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
-            builder.Services.AddAutoMapper(typeof(MappingProfiles));
+
+            builder.Services.AddApplicationServices();
+
+
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection String Not Found");
@@ -44,18 +49,19 @@ namespace Bookly.APIs
                 logger.LogError(ex, "An Error Occurred During Migration");
             }
 
-
+            app.UseMiddleware<ExceptionMiddleware>();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
+                
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
-
+            //app.UseAuthorization();
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
             app.MapControllers();
 
