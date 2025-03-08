@@ -21,7 +21,7 @@ namespace Bookly.APIs.Controllers
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<AuthorToReturnDto>>> GetAuthors()
         {
-            var spec = new AuthorWithSpecSpecifications();
+            var spec = new AuthorWithBooksSpecifications();
             var authors = await _unitOfWork.Repository<Author>().GetAllWithSpecAsync(spec);
             var mappedAuthors = _mapper.Map<IReadOnlyList<Author>, IReadOnlyList<AuthorToReturnDto>>(authors);
             return Ok(mappedAuthors);
@@ -30,7 +30,7 @@ namespace Bookly.APIs.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<AuthorToReturnDto>> GetAuthor(int id)
         {
-            var spec = new AuthorWithSpecSpecifications(id);
+            var spec = new AuthorWithBooksSpecifications(id);
             var author = await _unitOfWork.Repository<Author>().GetEntityWithSpecAsync(spec);
             if (author is null) return NotFound(new ApiResponse(404));
             return Ok(_mapper.Map<Author, AuthorToReturnDto>(author));
@@ -42,9 +42,9 @@ namespace Bookly.APIs.Controllers
         {
             var author = _mapper.Map<AuthorDto, Author>(model);
             await _unitOfWork.Repository<Author>().AddAsync(author);
-           var result =  await _unitOfWork.Complete();
+            var result = await _unitOfWork.Complete();
             if (result == 0) return BadRequest(new ApiResponse(400));
-            return Ok(_mapper.Map<Author,AuthorToReturnDto>(author));
+            return Ok(_mapper.Map<Author, AuthorToReturnDto>(author));
 
         }
 
@@ -61,14 +61,49 @@ namespace Bookly.APIs.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<DeletedMessageDto>> Delete(int id)
         {
-            var spec = new AuthorWithSpecSpecifications(id);
+            var spec = new AuthorWithBooksSpecifications(id);
             var author = await _unitOfWork.Repository<Author>().GetEntityWithSpecAsync(spec);
             _unitOfWork.Repository<Author>().Delete(author);
             var result = await _unitOfWork.Complete();
             if (result == 0) return BadRequest(new ApiResponse(400));
             return Ok(new DeletedMessageDto("Author was Deleted Successfully"));
-            
         }
 
+
+        //Add Book for a specific author
+        [HttpPost("{authorId}/books")]
+        public async Task<ActionResult<BookToReturnDto>> CreateBookForAuthor(int authorId, BookForAuthorDto model)
+        {
+            var spec = new AuthorWithBooksSpecifications(authorId);
+            var author = await _unitOfWork.Repository<Author>().GetEntityWithSpecAsync(spec);
+            var book = _mapper.Map<BookForAuthorDto, Book>(model);
+
+            book.AuthorId = authorId;
+
+            await _unitOfWork.Repository<Book>().AddAsync(book);
+            var result = await _unitOfWork.Complete();
+            if (result > 0) return Ok(_mapper.Map<Book, BookToReturnDto>(book));
+            return BadRequest(new ApiResponse(400));
+        }
+
+
+        [HttpGet("{authorId}/books")]
+        public async Task<ActionResult<IReadOnlyList<BookToReturnDto>>> GetBooksForAuthor(int authorId)
+        {
+            var spec = new BooksOfAuthorSpecifications(authorId);
+            var books = await _unitOfWork.Repository<Book>().GetAllWithSpecAsync(spec);
+            if (books is null) return NotFound(new ApiResponse(404));
+            var mappedBooks = _mapper.Map<IReadOnlyList<Book>, IReadOnlyList<BookToReturnDto>>(books);
+            return Ok(mappedBooks);
+        }
+
+        [HttpGet("{authorId}/books/{bookId}")]
+        public async Task<ActionResult<BookToReturnDto>> GetBookForAuthor(int authorId,int bookId)
+        {
+            var spec = new BooksOfAuthorSpecifications(authorId, bookId);
+            var book = await _unitOfWork.Repository<Book>().GetEntityWithSpecAsync(spec);
+            if(book is null) return NotFound(new ApiResponse(404));
+            return Ok(_mapper.Map<Book, BookToReturnDto>(book));
+        }
     }
 }

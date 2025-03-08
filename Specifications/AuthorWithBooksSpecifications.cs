@@ -2,14 +2,14 @@
 
 namespace Bookly.APIs.Specifications
 {
-    public class AuthorWithSpecSpecifications : BaseSpecifications<Author>
+    public class AuthorWithBooksSpecifications : BaseSpecifications<Author>
     {
-        public AuthorWithSpecSpecifications()
+        public AuthorWithBooksSpecifications()
         {
             Includes.Add(A => A.Books);
         }
 
-        public AuthorWithSpecSpecifications(int id):base(A=>A.Id==id)
+        public AuthorWithBooksSpecifications(int id):base(A=>A.Id==id)
         {
             Includes.Add(A => A.Books);
         }

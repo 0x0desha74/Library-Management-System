@@ -12,6 +12,7 @@ namespace Bookly.APIs.Helpers
             CreateMap<Book, BookToReturnDto>()
                 .ForMember(d => d.Author, O => O.MapFrom(s => s.Author.Name));
             CreateMap<BookDto, Book>().ReverseMap();
+            CreateMap<BookForAuthorDto, Book>().ReverseMap();
             CreateMap<Author, AuthorToReturnDto>()
                 .ForMember(d=>d.Books,O=>O.MapFrom(s=>s.Books.Select(a=>a.Title)));
             CreateMap<AuthorDto, Author>().ReverseMap();
