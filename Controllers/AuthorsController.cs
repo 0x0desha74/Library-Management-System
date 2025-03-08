@@ -97,13 +97,51 @@ namespace Bookly.APIs.Controllers
             return Ok(mappedBooks);
         }
 
+        //Get book by id for specific author
         [HttpGet("{authorId}/books/{bookId}")]
-        public async Task<ActionResult<BookToReturnDto>> GetBookForAuthor(int authorId,int bookId)
+        public async Task<ActionResult<BookToReturnDto>> GetBookForAuthor(int authorId, int bookId)
         {
             var spec = new BooksOfAuthorSpecifications(authorId, bookId);
             var book = await _unitOfWork.Repository<Book>().GetEntityWithSpecAsync(spec);
-            if(book is null) return NotFound(new ApiResponse(404));
+            if (book is null) return NotFound(new ApiResponse(404));
             return Ok(_mapper.Map<Book, BookToReturnDto>(book));
         }
+
+        //update book by id for a specific author
+        [HttpPut("{authorId}/books/{bookId}")]
+        public async Task<ActionResult<BookToReturnDto>> Edit(int authorId, int bookId, BookDto model)
+        {
+            var spec = new BooksOfAuthorSpecifications(authorId, bookId);
+            var book = await _unitOfWork.Repository<Book>().GetEntityWithSpecAsync(spec);
+            if (book is null) return NotFound(new ApiResponse(404));
+            book.Title = model.Title;
+            book.Description = model.Description;
+            book.PublishedDate = model.PublishedDate;
+            book.AvailableCount = model.AvailableCount;
+            book.TotalCount = model.TotalCount;
+            book.Genre = model.Genre;
+
+            _unitOfWork.Repository<Book>().Update(book);
+            var result = await _unitOfWork.Complete();
+            if (result > 0)
+                return Ok(_mapper.Map<Book, BookToReturnDto>(book));
+
+            return BadRequest(new ApiResponse(400));
+        }
+
+
+        [HttpDelete("{authorId}/books/{bookId}")]
+        public async Task<ActionResult<DeletedMessageDto>> Delete(int authorId, int bookId)
+        {
+            var spec = new BooksOfAuthorSpecifications(authorId, bookId);
+            var book = await _unitOfWork.Repository<Book>().GetEntityWithSpecAsync(spec);
+            if (book is null) return NotFound(new ApiResponse(404));
+            _unitOfWork.Repository<Book>().Delete(book);
+            var result = await _unitOfWork.Complete();
+            if (result > 0) return Ok(new DeletedMessageDto("Book was Deleted Successfully"));
+            return BadRequest(new ApiResponse(400));
+        }
+
+
     }
 }
