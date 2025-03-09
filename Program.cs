@@ -1,12 +1,8 @@
-
 using Bookly.APIs.Data;
 using Bookly.APIs.Data.Identity;
 using Bookly.APIs.Entities;
 using Bookly.APIs.Extensions;
-using Bookly.APIs.Helpers;
-using Bookly.APIs.Interfaces;
 using Bookly.APIs.Middlewares;
-using Bookly.APIs.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,11 +18,13 @@ namespace Bookly.APIs
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            
+
+
+
             builder.Services.AddIdentityServices();
             builder.Services.AddApplicationServices();
-
+            builder.Services.AddSwaggerServices();
 
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -70,9 +68,7 @@ namespace Bookly.APIs
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerMiddlewares();
             }
 
             app.UseHttpsRedirection();
