@@ -1,10 +1,13 @@
 
 using Bookly.APIs.Data;
+using Bookly.APIs.Data.Identity;
+using Bookly.APIs.Entities;
 using Bookly.APIs.Extensions;
 using Bookly.APIs.Helpers;
 using Bookly.APIs.Interfaces;
 using Bookly.APIs.Middlewares;
 using Bookly.APIs.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bookly.APIs
@@ -21,7 +24,7 @@ namespace Bookly.APIs
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+            builder.Services.AddIdentityServices();
             builder.Services.AddApplicationServices();
 
 
@@ -31,6 +34,14 @@ namespace Bookly.APIs
                 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection String Not Found");
                 options.UseSqlServer(connectionString);
             });
+
+            builder.Services.AddDbContext<AppIdentityDbContext>(options =>
+            {
+                var cs = builder.Configuration.GetConnectionString("IdentityConnection") ?? throw new InvalidOperationException("Connection String Not Found"); ;
+                options.UseSqlServer(cs);
+            });
+
+
 
             var app = builder.Build();
 
@@ -42,6 +53,12 @@ namespace Bookly.APIs
                 var context = services.GetRequiredService<ApplicationDbContext>();
                 await context.Database.MigrateAsync();
                 await ApplicationDbContextSeed.DataSeedAsync(context);
+
+                var identityContext = services.GetRequiredService<AppIdentityDbContext>();
+                await identityContext.Database.MigrateAsync();
+
+                var userManager = services.GetRequiredService<UserManager<AppUser>>();
+                await AppIdentityDbContextSeed.UserSeedAsync(userManager);
             }
             catch (Exception ex)
             {
@@ -59,7 +76,8 @@ namespace Bookly.APIs
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
+            app.UseAuthorization();
             //app.UseAuthorization();
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
