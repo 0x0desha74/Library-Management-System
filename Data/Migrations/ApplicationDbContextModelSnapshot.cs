@@ -70,6 +70,9 @@ namespace Bookly.APIs.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PictureUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateOnly>("PublishedDate")
                         .HasColumnType("date");
 

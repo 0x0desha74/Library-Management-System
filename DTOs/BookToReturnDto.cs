@@ -11,6 +11,8 @@ namespace Bookly.APIs.DTOs
         public string Author { get; set; }
         public DateOnly PublishedDate { get; set; }
         public string Genre { get; set; }
+        public string PictureUrl { get; set; }
+
         public int TotalCount { get; set; }
         public int AvailableCount { get; set; }
     }

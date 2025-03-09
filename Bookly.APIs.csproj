@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Folder Include="Data\DataSeed\" />
+    <Folder Include="wwwroot\images\books\" />
   </ItemGroup>
 
 </Project>

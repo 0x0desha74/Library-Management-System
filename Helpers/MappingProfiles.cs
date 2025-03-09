@@ -10,7 +10,8 @@ namespace Bookly.APIs.Helpers
         public MappingProfiles()
         {
             CreateMap<Book, BookToReturnDto>()
-                .ForMember(d => d.Author, O => O.MapFrom(s => s.Author.Name));
+                .ForMember(d => d.Author, O => O.MapFrom(s => s.Author.Name))
+                .ForMember(d=>d.PictureUrl,O=>O.MapFrom<BooksPictureUrlResolver>());
             CreateMap<BookDto, Book>().ReverseMap();
             CreateMap<BookForAuthorDto, Book>().ReverseMap();
             CreateMap<Author, AuthorToReturnDto>()

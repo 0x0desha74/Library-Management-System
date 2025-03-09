@@ -76,7 +76,7 @@ namespace Bookly.APIs
             app.UseAuthorization();
             //app.UseAuthorization();
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
-
+            app.UseStaticFiles();
             app.MapControllers();
 
             app.Run();

@@ -14,6 +14,7 @@ namespace Bookly.APIs.DTOs
         public DateOnly PublishedDate { get; set; }
         [Required]
         public string Genre { get; set; }
+        public string? PictureUrl { get; set; }
         [Required]
         public int TotalCount { get; set; }
         [Required]
