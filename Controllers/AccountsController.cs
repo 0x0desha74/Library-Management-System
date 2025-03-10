@@ -15,13 +15,15 @@ namespace Bookly.APIs.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ITokenService _tokenService;
 
-        public AccountsController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService)
+        public AccountsController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
+            _roleManager = roleManager;
         }
 
         [HttpPost("login")]
@@ -94,6 +96,30 @@ namespace Bookly.APIs.Controllers
             await _userManager.UpdateAsync(user);
             return Ok(new ActionDoneSuccessfullyMessageDto("Profile was updated successfully"));
         }
+
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("assign-role")]
+        public async Task<ActionResult<string>> AssignRole(AssignRoleDto model)
+        {
+            AppUser user;
+            if (!string.IsNullOrEmpty(model.Id))
+                user = await _userManager.FindByIdAsync(model.Id);
+
+            if (!string.IsNullOrEmpty(model.Email));
+                user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user is null) return NotFound(new ApiResponse(404,"User not found"));
+
+            if (!await _roleManager.RoleExistsAsync(model.Role))
+                return BadRequest(new ApiResponse(400, "Role is not existed"));
+
+            var result = await _userManager.AddToRoleAsync(user, model.Role);
+
+            if (!result.Succeeded) return BadRequest(new ApiResponse(400));
+            return Ok($"Role {model.Role} is assigned to the user");
+        }
+
 
 
 

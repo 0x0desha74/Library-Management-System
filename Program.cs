@@ -57,6 +57,10 @@ namespace Bookly.APIs
 
                 var userManager = services.GetRequiredService<UserManager<AppUser>>();
                 await AppIdentityDbContextSeed.UserSeedAsync(userManager);
+
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                await AppIdentityDbContextSeed.RoleSeedAsync(roleManager);
+
             }
             catch (Exception ex)
             {
