@@ -11,5 +11,6 @@
         public string? PictureUrl { get; set; }
         public int TotalCount { get; set; }
         public int AvailableCount { get; set; }
+        public ICollection<Review> Reviews { get; set; }
     }
 }

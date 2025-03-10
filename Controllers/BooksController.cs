@@ -22,9 +22,9 @@ namespace Bookly.APIs.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Book>>> GetBooks()
+        public async Task<ActionResult<IReadOnlyList<Book>>> GetBooks(int? authorId,string? genre)
         {
-            var spec = new BookWithAuthorsSpecification();
+            var spec = new BooksSpecification(authorId, genre);
             var books = await _unitOfWork.Repository<Book>().GetAllWithSpecAsync(spec);
             return Ok(_mapper.Map<IReadOnlyList<Book>, IReadOnlyList<BookToReturnDto>>(books));
         }
@@ -33,7 +33,7 @@ namespace Bookly.APIs.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Book>> GetBook(int id)
         {
-            var spec = new BookWithAuthorsSpecification(id);
+            var spec = new BooksSpecification(id);
             var book = await _unitOfWork.Repository<Book>().GetEntityWithSpecAsync(spec);
             return book is not null ? Ok(_mapper.Map<Book,BookToReturnDto>(book)) : NotFound(new ApiResponse(404));
         }
@@ -67,6 +67,17 @@ namespace Bookly.APIs.Controllers
             await _unitOfWork.Complete();
             return Ok(new ActionDoneSuccessfullyMessageDto("Book is deleted successfully"));
         }
+
+
+        [HttpGet("{id}/reviews")]
+        public async Task<ActionResult<IReadOnlyList<ReviewToReturnDto>>> GetReviews(int id)
+        {
+            var spec = new ReviewSpecifications(id);
+            var reviews = await _unitOfWork.Repository<Review>().GetAllWithSpecAsync(spec);
+            if (reviews is null) return NotFound(new ApiResponse(404));
+            return Ok(_mapper.Map<IReadOnlyList<Review>, IReadOnlyList<ReviewToReturnDto>>(reviews));
+        }
+
 
 
     }
