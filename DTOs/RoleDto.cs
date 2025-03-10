@@ -1,11 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Bookly.APIs.DTOs
+﻿namespace Bookly.APIs.DTOs
 {
     public class RoleDto:BaseRoleDto
     {
-        [Required]
-        public string Role { get; set; }
-
+        public IEnumerable<string> Roles { get; set; }
     }
 }

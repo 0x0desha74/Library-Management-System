@@ -100,7 +100,7 @@ namespace Bookly.APIs.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost("assign-role")]
-        public async Task<ActionResult<string>> AssignRole(RoleDto model)
+        public async Task<ActionResult<string>> AssignRole(AssignRoleDto model)
         {
             AppUser user=null;
             if (!string.IsNullOrEmpty(model.Id))
@@ -123,7 +123,7 @@ namespace Bookly.APIs.Controllers
 
         [Authorize(Roles="Admin")]
         [HttpGet("get-role")]
-        public async Task<ActionResult<RoleDto>> GetRole(RoleParamDto model)
+        public async Task<ActionResult<RoleDto>> GetRoles(BaseRoleDto model)
         {
             AppUser user=null;
             if (!string.IsNullOrEmpty(model.Id))
@@ -135,13 +135,12 @@ namespace Bookly.APIs.Controllers
             if (user is null) return NotFound(new ApiResponse(404, "User not found"));
 
             var roles = await _userManager.GetRolesAsync(user);
-            string role=null;
-            role = roles.Aggregate(role, (currentRole, nextRole) => $"{currentRole},{nextRole}");
+            
             return Ok(new RoleDto()
             {
-                Email = model.Email,
-                Id = model.Id,
-                Role = role
+                Email = user.Email,
+                Id = user.Id,
+                Roles = roles
             });
 
         }
