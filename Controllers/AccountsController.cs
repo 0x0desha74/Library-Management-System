@@ -100,13 +100,13 @@ namespace Bookly.APIs.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost("assign-role")]
-        public async Task<ActionResult<string>> AssignRole(AssignRoleDto model)
+        public async Task<ActionResult<string>> AssignRole(RoleDto model)
         {
-            AppUser user;
+            AppUser user=null;
             if (!string.IsNullOrEmpty(model.Id))
                 user = await _userManager.FindByIdAsync(model.Id);
 
-            if (!string.IsNullOrEmpty(model.Email));
+            if (!string.IsNullOrEmpty(model.Email))
                 user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user is null) return NotFound(new ApiResponse(404,"User not found"));
@@ -121,7 +121,30 @@ namespace Bookly.APIs.Controllers
         }
 
 
+        [Authorize(Roles="Admin")]
+        [HttpGet("get-role")]
+        public async Task<ActionResult<RoleDto>> GetRole(RoleParamDto model)
+        {
+            AppUser user=null;
+            if (!string.IsNullOrEmpty(model.Id))
+                user = await _userManager.FindByIdAsync(model.Id);
 
+            if (!string.IsNullOrEmpty(model.Email)) 
+                user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user is null) return NotFound(new ApiResponse(404, "User not found"));
+
+            var roles = await _userManager.GetRolesAsync(user);
+            string role=null;
+            role = roles.Aggregate(role, (currentRole, nextRole) => $"{currentRole},{nextRole}");
+            return Ok(new RoleDto()
+            {
+                Email = model.Email,
+                Id = model.Id,
+                Role = role
+            });
+
+        }
 
 
 
