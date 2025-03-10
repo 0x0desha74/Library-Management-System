@@ -1,6 +1,7 @@
 ﻿using Bookly.APIs.DTOs;
 using Bookly.APIs.Entities;
 using Bookly.APIs.Error;
+using Bookly.APIs.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,11 +13,13 @@ namespace Bookly.APIs.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly ITokenService _tokenService;
 
-        public AccountsController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public AccountsController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _tokenService = tokenService;
         }
 
         [HttpPost("login")]
@@ -30,7 +33,7 @@ namespace Bookly.APIs.Controllers
             {
                 DisplayName = user.DisplayName,
                 Email = user.Email,
-                Token = "Token"
+                Token = await _tokenService.CreateTokenAsync(user, _userManager)
             });
 
         }
@@ -53,13 +56,12 @@ namespace Bookly.APIs.Controllers
             {
                 DisplayName= user.DisplayName,
                 Email=user.Email,
-                Token = "Token"
+                Token = await _tokenService.CreateTokenAsync(user, _userManager)
             });
 
 
 
         }
-
 
 
 

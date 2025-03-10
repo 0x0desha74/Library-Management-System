@@ -4,6 +4,7 @@ using Bookly.APIs.Entities;
 using Bookly.APIs.Error;
 using Bookly.APIs.Interfaces;
 using Bookly.APIs.Specifications;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bookly.APIs.Controllers
@@ -18,6 +19,7 @@ namespace Bookly.APIs.Controllers
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
 
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<Book>>> GetBooks()
@@ -36,7 +38,7 @@ namespace Bookly.APIs.Controllers
             return book is not null ? Ok(_mapper.Map<Book,BookToReturnDto>(book)) : NotFound(new ApiResponse(404));
         }
 
-
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<BookDto>> Create(BookDto model)
         {
@@ -45,6 +47,7 @@ namespace Bookly.APIs.Controllers
             await _unitOfWork.Complete();
             return Ok(model);
         }
+        [Authorize]
 
         [HttpPut]
         public async Task<ActionResult<BookDto>> Edit(BookDto model)
@@ -54,6 +57,7 @@ namespace Bookly.APIs.Controllers
             await _unitOfWork.Complete();
             return Ok(model);
         }
+        [Authorize]
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<DeletedMessageDto>> Delete(int id)

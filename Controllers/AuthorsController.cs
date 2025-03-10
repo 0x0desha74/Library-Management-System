@@ -4,6 +4,7 @@ using Bookly.APIs.Entities;
 using Bookly.APIs.Error;
 using Bookly.APIs.Interfaces;
 using Bookly.APIs.Specifications;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bookly.APIs.Controllers
@@ -36,7 +37,7 @@ namespace Bookly.APIs.Controllers
             return Ok(_mapper.Map<Author, AuthorToReturnDto>(author));
         }
 
-
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<AuthorToReturnDto>> Create(AuthorDto model)
         {
@@ -48,6 +49,7 @@ namespace Bookly.APIs.Controllers
 
         }
 
+        [Authorize]
         [HttpPut]
         public async Task<ActionResult<Author>> Edit(AuthorDto model)
         {
@@ -58,6 +60,7 @@ namespace Bookly.APIs.Controllers
             return Ok(author);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<DeletedMessageDto>> Delete(int id)
         {
@@ -69,7 +72,7 @@ namespace Bookly.APIs.Controllers
             return Ok(new DeletedMessageDto("Author was Deleted Successfully"));
         }
 
-
+        [Authorize]
         //Add Book for a specific author
         [HttpPost("{authorId}/books")]
         public async Task<ActionResult<BookToReturnDto>> CreateBookForAuthor(int authorId, BookForAuthorDto model)
@@ -106,7 +109,7 @@ namespace Bookly.APIs.Controllers
             if (book is null) return NotFound(new ApiResponse(404));
             return Ok(_mapper.Map<Book, BookToReturnDto>(book));
         }
-
+        [Authorize]
         //update book by id for a specific author
         [HttpPut("{authorId}/books/{bookId}")]
         public async Task<ActionResult<BookToReturnDto>> Edit(int authorId, int bookId, BookDto model)
@@ -129,7 +132,7 @@ namespace Bookly.APIs.Controllers
             return BadRequest(new ApiResponse(400));
         }
 
-
+        [Authorize]
         [HttpDelete("{authorId}/books/{bookId}")]
         public async Task<ActionResult<DeletedMessageDto>> Delete(int authorId, int bookId)
         {

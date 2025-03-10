@@ -22,7 +22,7 @@ namespace Bookly.APIs
 
 
 
-            builder.Services.AddIdentityServices();
+            builder.Services.AddIdentityServices(builder.Configuration);
             builder.Services.AddApplicationServices();
             builder.Services.AddSwaggerServices();
 
