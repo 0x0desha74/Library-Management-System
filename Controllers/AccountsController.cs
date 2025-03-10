@@ -2,8 +2,10 @@
 using Bookly.APIs.Entities;
 using Bookly.APIs.Error;
 using Bookly.APIs.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 
 namespace Bookly.APIs.Controllers
@@ -62,6 +64,38 @@ namespace Bookly.APIs.Controllers
 
 
         }
+
+
+        [Authorize]
+        [HttpGet("profile")]
+        public async Task<ActionResult<ProfileDto>> GetProfile()
+        {
+             var email = User.FindFirstValue(ClaimTypes.Email);
+            var user = await _userManager.FindByEmailAsync(email);
+            return Ok(new ProfileDto()
+            {
+                DisplayName = user.DisplayName,
+                PhoneNumber = user.PhoneNumber,
+                Email = email,
+                UserName = user.UserName,
+                JoinedDate = user.JoinedDate
+            });
+        }
+
+
+        [Authorize]
+        [HttpPut("profile")]
+        public async Task<ActionResult<ActionDoneSuccessfullyMessageDto>> EditProfile(UpdatedUserDto model)
+        {
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            var user = await _userManager.FindByEmailAsync(email);
+            user.DisplayName = model.DisplayName;
+            user.PhoneNumber = model.PhoneNumber;
+            await _userManager.UpdateAsync(user);
+            return Ok(new ActionDoneSuccessfullyMessageDto("Profile was updated successfully"));
+        }
+
+
 
 
 

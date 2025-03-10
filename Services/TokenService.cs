@@ -41,7 +41,10 @@ namespace Bookly.APIs.Services
                 issuer: _config["JWT:ValidIssuer"],
                 audience: _config["JWT:ValidAudience"],
                 expires: DateTime.Now.AddDays(double.Parse(_config["JWT:DurationTimeInDayes"])),
+                claims: authClaims,
                 signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha256Signature)
+                
+                
                 );
 
             return new JwtSecurityTokenHandler().WriteToken(token);

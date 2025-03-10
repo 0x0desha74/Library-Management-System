@@ -60,12 +60,12 @@ namespace Bookly.APIs.Controllers
         [Authorize]
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<DeletedMessageDto>> Delete(int id)
+        public async Task<ActionResult<ActionDoneSuccessfullyMessageDto>> Delete(int id)
         {
             var book = await _unitOfWork.Repository<Book>().GetByIdAsync(id);
             _unitOfWork.Repository<Book>().Delete(book);
             await _unitOfWork.Complete();
-            return Ok(new DeletedMessageDto("Book is deleted successfully"));
+            return Ok(new ActionDoneSuccessfullyMessageDto("Book is deleted successfully"));
         }
 
 

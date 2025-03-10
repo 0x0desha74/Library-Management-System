@@ -1,10 +1,10 @@
 ﻿namespace Bookly.APIs.DTOs
 {
-    public class DeletedMessageDto
+    public class ActionDoneSuccessfullyMessageDto
     {
         public string Message { get; set; }
 
-        public DeletedMessageDto(string message)
+        public ActionDoneSuccessfullyMessageDto(string message)
         {
             Message = message;
         }

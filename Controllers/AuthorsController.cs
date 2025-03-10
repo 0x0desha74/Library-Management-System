@@ -62,14 +62,14 @@ namespace Bookly.APIs.Controllers
 
         [Authorize]
         [HttpDelete("{id}")]
-        public async Task<ActionResult<DeletedMessageDto>> Delete(int id)
+        public async Task<ActionResult<ActionDoneSuccessfullyMessageDto>> Delete(int id)
         {
             var spec = new AuthorWithBooksSpecifications(id);
             var author = await _unitOfWork.Repository<Author>().GetEntityWithSpecAsync(spec);
             _unitOfWork.Repository<Author>().Delete(author);
             var result = await _unitOfWork.Complete();
             if (result == 0) return BadRequest(new ApiResponse(400));
-            return Ok(new DeletedMessageDto("Author was Deleted Successfully"));
+            return Ok(new ActionDoneSuccessfullyMessageDto("Author was Deleted Successfully"));
         }
 
         [Authorize]
@@ -134,14 +134,14 @@ namespace Bookly.APIs.Controllers
 
         [Authorize]
         [HttpDelete("{authorId}/books/{bookId}")]
-        public async Task<ActionResult<DeletedMessageDto>> Delete(int authorId, int bookId)
+        public async Task<ActionResult<ActionDoneSuccessfullyMessageDto>> Delete(int authorId, int bookId)
         {
             var spec = new BooksOfAuthorSpecifications(authorId, bookId);
             var book = await _unitOfWork.Repository<Book>().GetEntityWithSpecAsync(spec);
             if (book is null) return NotFound(new ApiResponse(404));
             _unitOfWork.Repository<Book>().Delete(book);
             var result = await _unitOfWork.Complete();
-            if (result > 0) return Ok(new DeletedMessageDto("Book was Deleted Successfully"));
+            if (result > 0) return Ok(new ActionDoneSuccessfullyMessageDto("Book was Deleted Successfully"));
             return BadRequest(new ApiResponse(400));
         }
 
