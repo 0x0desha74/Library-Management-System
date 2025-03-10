@@ -6,6 +6,7 @@ using Bookly.APIs.Interfaces;
 using Bookly.APIs.Specifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Bookly.APIs.Controllers
 {
@@ -22,7 +23,7 @@ namespace Bookly.APIs.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Book>>> GetBooks(int? authorId,string? genre)
+        public async Task<ActionResult<IReadOnlyList<Book>>> GetBooks(int? authorId, string? genre)
         {
             var spec = new BooksSpecification(authorId, genre);
             var books = await _unitOfWork.Repository<Book>().GetAllWithSpecAsync(spec);
@@ -35,7 +36,7 @@ namespace Bookly.APIs.Controllers
         {
             var spec = new BooksSpecification(id);
             var book = await _unitOfWork.Repository<Book>().GetEntityWithSpecAsync(spec);
-            return book is not null ? Ok(_mapper.Map<Book,BookToReturnDto>(book)) : NotFound(new ApiResponse(404));
+            return book is not null ? Ok(_mapper.Map<Book, BookToReturnDto>(book)) : NotFound(new ApiResponse(404));
         }
 
         [Authorize]
@@ -52,7 +53,7 @@ namespace Bookly.APIs.Controllers
         [HttpPut]
         public async Task<ActionResult<BookDto>> Edit(BookDto model)
         {
-           var mappedBook= _mapper.Map<BookDto, Book>(model);
+            var mappedBook = _mapper.Map<BookDto, Book>(model);
             _unitOfWork.Repository<Book>().Update(mappedBook);
             await _unitOfWork.Complete();
             return Ok(model);
@@ -70,15 +71,25 @@ namespace Bookly.APIs.Controllers
 
 
         [HttpGet("{id}/reviews")]
-        public async Task<ActionResult<IReadOnlyList<ReviewToReturnDto>>> GetReviews(int id)
+        public async Task<ActionResult<IReadOnlyList<ReviewDto>>> GetReviews(int id)
         {
             var spec = new ReviewSpecifications(id);
             var reviews = await _unitOfWork.Repository<Review>().GetAllWithSpecAsync(spec);
             if (reviews is null) return NotFound(new ApiResponse(404));
-            return Ok(_mapper.Map<IReadOnlyList<Review>, IReadOnlyList<ReviewToReturnDto>>(reviews));
+            return Ok(_mapper.Map<IReadOnlyList<Review>, IReadOnlyList<ReviewDto>>(reviews));
         }
-
-
+        [Authorize]
+        [HttpPost("{id}/reviews")]
+        public async Task<ActionResult<Review>> CreateReview(int id,ReviewDto model)
+        {
+            var review = _mapper.Map<ReviewDto, Review>(model);
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            review.BookId = id;
+            await _unitOfWork.Repository<Review>().AddAsync(review);
+            var result = await _unitOfWork.Complete();
+            if (result > 0) return Ok(review);
+            return BadRequest(new ApiResponse(400));
+        }
 
     }
 }

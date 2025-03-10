@@ -2,7 +2,7 @@
 
 namespace Bookly.APIs.DTOs
 {
-    public class ReviewToReturnDto
+    public class ReviewDto
     {
         [Required]
         [Range(0,5)]
