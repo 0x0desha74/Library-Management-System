@@ -11,6 +11,6 @@ namespace Bookly.APIs.DTOs
         public DateTime DueDate { get; set; }
         public DateTime? ReturnDate { get; set; }
         public bool IsReturned { get; set; } = false;
-        public FineDto Fine { get; set; }
+        public FineToReturnDto Fine { get; set; }
     }
 }

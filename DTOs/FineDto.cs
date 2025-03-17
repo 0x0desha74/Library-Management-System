@@ -1,10 +1,15 @@
-﻿namespace Bookly.APIs.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Bookly.APIs.DTOs
 {
     public class FineDto
     {
-        public int Id { get; set; }
+        [Required]
+        public string UserId { get; set; }
+      
+        [Required]
         public decimal Amount { get; set; }
+        [Required]
         public string Reason { get; set; }
-        public bool IsPaid { get; set; }
     }
 }

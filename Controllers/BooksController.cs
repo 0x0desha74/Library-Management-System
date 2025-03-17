@@ -138,7 +138,7 @@ namespace Bookly.APIs.Controllers
             if (record is null) return NotFound(new ApiResponse(404, "This book is borrowed by this user"));
             if (record.IsReturned) return BadRequest("Book is already returned");
             record.ReturnDate = DateTime.Now;
-
+            record.IsReturned = true;
             var book = await _unitOfWork.Repository<Book>().GetByIdAsync(bookId);
             book.AvailableCount += 1;
 
@@ -147,6 +147,8 @@ namespace Bookly.APIs.Controllers
             return BadRequest(new ApiResponse(400));
 
         }
+
+
 
         [HttpGet("{bookId}/borrow-records")]
         public async Task<ActionResult<IReadOnlyList<BorrowRecordToReturnDto>>> GetBorrowRecords(int bookId)
@@ -157,7 +159,23 @@ namespace Bookly.APIs.Controllers
             return Ok(_mapper.Map < IReadOnlyList<BorrowRecord>, IReadOnlyList<BorrowRecordToReturnDto>>(records));
         }
 
-
+        [Authorize(Roles="Admin")]
+        [HttpPost("{bookId}/fines")]
+        public async Task<ActionResult<Fine>> CreateFine(int bookId,FineDto model)
+        {
+            var spec = new BorrowRecordSpecifications(model.UserId, bookId);
+            var record = await _unitOfWork.Repository<BorrowRecord>().GetEntityWithSpecAsync(spec);
+            if (record is null) return NotFound(new ApiResponse(404));
+            
+            var fine = _mapper.Map<FineDto, Fine>(model);
+            fine.BorrowRecordId = record.Id;
+            fine.BookId = record.BookId;
+            await _unitOfWork.Repository<Fine>().AddAsync(fine);
+            var result = await _unitOfWork.Complete();
+            if (result > 0) return Ok(fine);
+            return BadRequest(new ApiResponse(400));
+            
+        }
 
 
     }
