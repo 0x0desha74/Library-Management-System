@@ -165,7 +165,7 @@ namespace Bookly.APIs.Controllers
         {
             var spec = new BorrowRecordSpecifications(model.UserId, bookId);
             var record = await _unitOfWork.Repository<BorrowRecord>().GetEntityWithSpecAsync(spec);
-            if (record is null) return NotFound(new ApiResponse(404));
+            if (record is null) return NotFound(new ApiResponse(404,"No borrow records for this book by this user"));
             
             var fine = _mapper.Map<FineDto, Fine>(model);
             fine.BorrowRecordId = record.Id;
@@ -176,6 +176,24 @@ namespace Bookly.APIs.Controllers
             return BadRequest(new ApiResponse(400));
             
         }
+
+        [HttpPost("{bookId}/fines/{findId}/pay")]
+        public async Task<ActionResult<Fine>> PayFine(int bookId,int findId)
+        {
+            var spec = new FineSpecifications(bookId, findId);
+            var fine = await _unitOfWork.Repository<Fine>().GetEntityWithSpecAsync(spec);
+            if (fine is null) return NotFound(new ApiResponse(404, "No fines for this book"));
+            fine.IsPaid = true;
+            var result = await _unitOfWork.Complete();
+            if (result > 0) return Ok(fine);
+            return BadRequest(new ApiResponse(400));
+        }
+
+
+
+
+
+
 
 
     }
