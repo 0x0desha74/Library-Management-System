@@ -10,5 +10,6 @@ namespace Bookly.APIs.DTOs
         [Required]
         [MaxLength(2500)]
         public string Comment { get; set; }
+        
     }
 }

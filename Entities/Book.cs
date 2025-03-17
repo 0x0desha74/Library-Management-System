@@ -11,6 +11,7 @@
         public string? PictureUrl { get; set; }
         public int TotalCount { get; set; }
         public int AvailableCount { get; set; }
-        public ICollection<Review> Reviews { get; set; }
+        public ICollection<Review> Reviews { get; set; } 
+        public ICollection<BorrowRecord> BorrowRecords { get; set; } = new List<BorrowRecord>();
     }
 }

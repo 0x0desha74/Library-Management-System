@@ -4,6 +4,7 @@ using Bookly.APIs.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookly.APIs.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250317060719_AddBorrowRecordsTableAndFinesTable")]
+    partial class AddBorrowRecordsTableAndFinesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,12 +139,6 @@ namespace Bookly.APIs.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("BorrowRecordId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsPaid")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Reason")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -151,9 +148,6 @@ namespace Bookly.APIs.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BorrowRecordId")
-                        .IsUnique();
 
                     b.ToTable("Fines");
                 });
@@ -214,15 +208,6 @@ namespace Bookly.APIs.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Bookly.APIs.Entities.Fine", b =>
-                {
-                    b.HasOne("Bookly.APIs.Entities.BorrowRecord", null)
-                        .WithOne("Fine")
-                        .HasForeignKey("Bookly.APIs.Entities.Fine", "BorrowRecordId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Bookly.APIs.Entities.Review", b =>
                 {
                     b.HasOne("Bookly.APIs.Entities.Book", null)
@@ -242,12 +227,6 @@ namespace Bookly.APIs.Migrations
                     b.Navigation("BorrowRecords");
 
                     b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("Bookly.APIs.Entities.BorrowRecord", b =>
-                {
-                    b.Navigation("Fine")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
