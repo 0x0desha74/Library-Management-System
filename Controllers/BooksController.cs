@@ -148,6 +148,15 @@ namespace Bookly.APIs.Controllers
 
         }
 
+        [HttpGet("{bookId}/borrow-status")]
+        public async Task<ActionResult<ActionDoneSuccessfullyMessageDto>> BorrowStatus(int bookId)
+        {
+            var spec = new BorrowRecordSpecifications(bookId);
+            var record = await _unitOfWork.Repository<BorrowRecord>().GetEntityWithSpecAsync(spec);
+            if (record is null) return NotFound(new ApiResponse(404, "No borrow records for this book"));
+            if (record.IsReturned) return Ok(new ActionDoneSuccessfullyMessageDto("Book is borrowed"));
+            return Ok(new ActionDoneSuccessfullyMessageDto("Book is available"));
+        }
 
 
         [HttpGet("{bookId}/borrow-records")]
@@ -158,6 +167,17 @@ namespace Bookly.APIs.Controllers
             if (records is null) return BadRequest(new ApiResponse(404));
             return Ok(_mapper.Map < IReadOnlyList<BorrowRecord>, IReadOnlyList<BorrowRecordToReturnDto>>(records));
         }
+
+        [Authorize(Roles ="Admin")]
+        [HttpGet("{bookId}/fines")]
+        public async Task<ActionResult<IReadOnlyList<FineToReturnDto>>> GetFines(int bookId)
+        {
+            var spec = new FineSpecifications(bookId);
+            var fines = await _unitOfWork.Repository<Fine>().GetAllWithSpecAsync(spec);
+            if (fines is null) return NotFound(new ApiResponse(404, "No fines found for this book"));
+            return Ok(_mapper.Map<IReadOnlyList<Fine>, IReadOnlyList<FineToReturnDto>>(fines));
+        }
+
 
         [Authorize(Roles="Admin")]
         [HttpPost("{bookId}/fines")]
@@ -177,12 +197,15 @@ namespace Bookly.APIs.Controllers
             
         }
 
+
+        [Authorize]
         [HttpPost("{bookId}/fines/{findId}/pay")]
         public async Task<ActionResult<Fine>> PayFine(int bookId,int findId)
         {
             var spec = new FineSpecifications(bookId, findId);
             var fine = await _unitOfWork.Repository<Fine>().GetEntityWithSpecAsync(spec);
             if (fine is null) return NotFound(new ApiResponse(404, "No fines for this book"));
+            //Pay using and third party(e.g, Stripe)
             fine.IsPaid = true;
             var result = await _unitOfWork.Complete();
             if (result > 0) return Ok(fine);
@@ -191,7 +214,17 @@ namespace Bookly.APIs.Controllers
 
 
 
-
+        [HttpDelete("{bookId}/fines/{fineId}")]
+        public async Task<ActionResult<ActionDoneSuccessfullyMessageDto>> DeleteFine(int bookId,int fineId)
+        {
+            var spec = new FineSpecifications(bookId, fineId);
+            var fine = await _unitOfWork.Repository<Fine>().GetEntityWithSpecAsync(spec);
+            if (fine is null) return NotFound(new ApiResponse(404, "No Fines For this book"));
+            _unitOfWork.Repository<Fine>().Delete(fine);
+            var result = await _unitOfWork.Complete();
+            if (result > 0) return Ok(new ActionDoneSuccessfullyMessageDto("Fine deleted successfully"));
+            return BadRequest(new ApiResponse(400));
+        }
 
 
 

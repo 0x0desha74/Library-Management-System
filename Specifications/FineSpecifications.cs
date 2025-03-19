@@ -8,5 +8,10 @@ namespace Bookly.APIs.Specifications
         {
 
         }
+
+        public FineSpecifications(int bookId):base(f=>f.BookId ==bookId)
+        {
+
+        }
     }
 }
