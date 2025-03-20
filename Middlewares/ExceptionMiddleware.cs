@@ -28,12 +28,12 @@ namespace Bookly.APIs.Middlewares
                 _logger.LogError(ex, ex.Message);
 
                 context.Response.ContentType = "application/json";
-                context.Response.StatusCode =(int) HttpStatusCode.InternalServerError;
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
 
                 var response = _env.IsDevelopment() ?
-                    new ApiExceptionResponse((int)HttpStatusCode.InternalServerError,ex.Message,ex.StackTrace?.ToString())
-                    : new ApiExceptionResponse((int) HttpStatusCode.InternalServerError);
+                    new ApiExceptionResponse((int)HttpStatusCode.InternalServerError, ex.Message, ex.StackTrace?.ToString())
+                    : new ApiExceptionResponse((int)HttpStatusCode.InternalServerError);
 
                 var options = new JsonSerializerOptions()
                 {

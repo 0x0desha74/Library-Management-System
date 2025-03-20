@@ -1,6 +1,4 @@
-﻿using Bookly.APIs.Entities;
-
-namespace Bookly.APIs.DTOs
+﻿namespace Bookly.APIs.DTOs
 {
     public class AuthorToReturnDto
     {
@@ -9,6 +7,6 @@ namespace Bookly.APIs.DTOs
         public string? Bio { get; set; }
         public DateOnly BirthDate { get; set; }
         public DateOnly? DeathDate { get; set; }
-        public ICollection<string> Books { get; set; } 
+        public ICollection<string> Books { get; set; }
     }
 }

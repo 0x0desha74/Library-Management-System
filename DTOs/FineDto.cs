@@ -6,7 +6,7 @@ namespace Bookly.APIs.DTOs
     {
         [Required]
         public string UserId { get; set; }
-      
+
         [Required]
         public decimal Amount { get; set; }
         [Required]

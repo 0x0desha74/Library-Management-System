@@ -1,5 +1,4 @@
 ﻿using Bookly.APIs.Entities;
-using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 namespace Bookly.APIs.Data
@@ -36,7 +35,7 @@ namespace Bookly.APIs.Data
             }
 
 
-          
+
 
         }
     }

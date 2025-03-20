@@ -2,9 +2,9 @@
 
 namespace Bookly.APIs.DTOs
 {
-    public class AssignRoleDto:BaseRoleDto
+    public class AssignRoleDto : BaseRoleDto
     {
-       
+
         [Required]
         public string Role { get; set; }
     }

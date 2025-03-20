@@ -4,7 +4,7 @@ using Bookly.APIs.Entities;
 
 namespace Bookly.APIs.Helpers
 {
-    public class BooksPictureUrlResolver : IValueResolver<Book,BookToReturnDto,string>
+    public class BooksPictureUrlResolver : IValueResolver<Book, BookToReturnDto, string>
     {
         private IConfiguration _config;
 
@@ -15,7 +15,7 @@ namespace Bookly.APIs.Helpers
 
         public string Resolve(Book source, BookToReturnDto destination, string destMember, ResolutionContext context)
         {
-            if(!string.IsNullOrEmpty(source.PictureUrl))
+            if (!string.IsNullOrEmpty(source.PictureUrl))
             {
                 return $"{_config["ApiBaseUrl"]}{source.PictureUrl}";
             }

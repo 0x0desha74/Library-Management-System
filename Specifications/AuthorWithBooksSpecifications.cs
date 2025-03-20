@@ -9,7 +9,7 @@ namespace Bookly.APIs.Specifications
             Includes.Add(A => A.Books);
         }
 
-        public AuthorWithBooksSpecifications(int id):base(A=>A.Id==id)
+        public AuthorWithBooksSpecifications(int id) : base(A => A.Id == id)
         {
             Includes.Add(A => A.Books);
         }

@@ -11,7 +11,7 @@ namespace Bookly.APIs.Data.Configurations
             builder.Property(f => f.Amount)
                 .HasColumnType("decimal(18,2)");
 
-           
+
         }
     }
 }

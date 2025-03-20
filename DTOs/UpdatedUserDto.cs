@@ -2,8 +2,8 @@
 {
     public class UpdatedUserDto : BaseUserDto
     {
-       
+
     }
 
-   
+
 }

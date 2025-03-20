@@ -6,7 +6,7 @@ namespace Bookly.APIs.Error
         public int StatusCode { get; set; }
         public string? Message { get; set; }
 
-        public ApiResponse(int statusCode, string message=null)
+        public ApiResponse(int statusCode, string message = null)
         {
             StatusCode = statusCode;
             Message = message ?? GetDefaultMessageForStatusCode(statusCode);
@@ -20,7 +20,7 @@ namespace Bookly.APIs.Error
                 404 => "Resource was not found",
                 401 => "Authorized, you are not",
                 500 => "Errors are the bath to dark side.Errors leads to anger. anger leads to hate. Hates leads to career change.",
-                _=>null
+                _ => null
             };
         }
     }

@@ -14,10 +14,10 @@ namespace Bookly.APIs.Specifications
 
         }
 
-        public BaseSpecifications(Expression<Func<T,bool>> criteria)
+        public BaseSpecifications(Expression<Func<T, bool>> criteria)
         {
             Criteria = criteria;
-            
+
         }
     }
 }

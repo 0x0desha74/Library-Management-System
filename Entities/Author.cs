@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Bookly.APIs.Entities
+﻿namespace Bookly.APIs.Entities
 {
     public class Author : BaseEntity
     {

@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Bookly.APIs.DTOs;
 using Bookly.APIs.Entities;
-using Bookly.APIs.Error;
 using Bookly.APIs.Interfaces;
-using Bookly.APIs.Repositories;
 using Bookly.APIs.Specifications;
 
 namespace Bookly.APIs.Services
@@ -19,10 +17,9 @@ namespace Bookly.APIs.Services
             _mapper = mapper;
         }
 
-        public async Task<BorrowRecord?> BorrowBook(int bookId, BorrowRecordDto model)
+        public async Task<BorrowRecord?> BorrowBook(Book book, BorrowRecordDto model)
         {
-            var book = await _unitOfWork.Repository<Book>().GetByIdAsync(model.BookId);
-            if (book.AvailableCount == 0) throw new InvalidOperationException("This Book Is Not Available Right Now");
+
             var record = _mapper.Map<BorrowRecordDto, BorrowRecord>(model);
             record.BookId = model.BookId;
             await _unitOfWork.Repository<BorrowRecord>().AddAsync(record);

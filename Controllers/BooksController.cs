@@ -87,13 +87,13 @@ namespace Bookly.APIs.Controllers
             return Ok(reviews);
         }
         [Authorize]
-        [HttpPost("{id}/reviews")]
-        public async Task<ActionResult<Review>> CreateReview(int id, ReviewDto model)
+        [HttpPost("{bookId}/reviews")]
+        public async Task<ActionResult<Review>> CreateReview(int bookId, ReviewDto model)
         {
-            var review = _mapper.Map<ReviewDto, Review>(model);
             var email = User.FindFirstValue(ClaimTypes.Email);
             var user = await _userManager.FindByEmailAsync(email);
-            review.BookId = id;
+            var review = _mapper.Map<ReviewDto, Review>(model);
+            review.BookId = bookId;
             review.UserId = user.Id;
             review.ReviewerName = user.DisplayName;
             await _unitOfWork.Repository<Review>().AddAsync(review);
@@ -118,7 +118,7 @@ namespace Bookly.APIs.Controllers
         public async Task<ActionResult<BorrowRecord>> Borrow(int bookId, BorrowRecordDto model)
         {
             var book = await _unitOfWork.Repository<Book>().GetByIdAsync(model.BookId);
-            if (book.AvailableCount == 0) return BadRequest(new ApiResponse(400,"This Book Is Not Available Right Now"));
+            if (book.AvailableCount == 0) return BadRequest(new ApiResponse(400, "This Book Is Not Available Right Now"));
             var record = await _borrowService.BorrowBook(book, model);
             if (record is null) return NotFound(new ApiResponse(404));
             return Ok(record);

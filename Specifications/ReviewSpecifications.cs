@@ -2,9 +2,9 @@
 
 namespace Bookly.APIs.Specifications
 {
-    public class ReviewSpecifications:BaseSpecifications<Review>
+    public class ReviewSpecifications : BaseSpecifications<Review>
     {
-        public ReviewSpecifications(int id):base(r=>r.BookId ==id)
+        public ReviewSpecifications(int id) : base(r => r.BookId == id)
         {
 
         }

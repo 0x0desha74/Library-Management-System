@@ -22,7 +22,7 @@ namespace Bookly.APIs.Extensions
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme= JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
                 .AddJwtBearer(options =>
                 {
@@ -30,7 +30,7 @@ namespace Bookly.APIs.Extensions
                     {
                         ValidateIssuer = true,
                         ValidIssuer = _config["JWT:ValidIssuer"],
-                        ValidateAudience=true,
+                        ValidateAudience = true,
                         ValidAudience = _config["JWT:ValidAudience"],
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,

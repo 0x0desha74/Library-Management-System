@@ -43,8 +43,8 @@ namespace Bookly.APIs.Services
                 expires: DateTime.Now.AddDays(double.Parse(_config["JWT:DurationTimeInDayes"])),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha256Signature)
-                
-                
+
+
                 );
 
             return new JwtSecurityTokenHandler().WriteToken(token);

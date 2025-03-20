@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Bookly.APIs.DTOs;
 using Bookly.APIs.Entities;
-using Bookly.APIs.Error;
 using Bookly.APIs.Interfaces;
-using Bookly.APIs.Repositories;
 using Bookly.APIs.Specifications;
 
 namespace Bookly.APIs.Services
@@ -44,6 +42,6 @@ namespace Bookly.APIs.Services
             return result > 0 ? fine : null;
         }
 
-        
+
     }
 }

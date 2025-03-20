@@ -1,11 +1,10 @@
 ﻿using Bookly.APIs.Data;
 using Bookly.APIs.Error;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bookly.APIs.Controllers
 {
-    
+
     public class BuggyController : BaseApiController
     {
         private readonly ApplicationDbContext _context;

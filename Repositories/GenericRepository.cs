@@ -43,7 +43,7 @@ namespace Bookly.APIs.Repositories
         public void Delete(T entity)
         {
             _dbContext.Set<T>().Remove(entity);
-            
+
         }
 
 

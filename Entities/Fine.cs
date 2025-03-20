@@ -1,6 +1,6 @@
 ﻿namespace Bookly.APIs.Entities
 {
-    public class Fine:BaseEntity
+    public class Fine : BaseEntity
     {
         public string UserId { get; set; }
         public int BookId { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace Bookly.APIs.Entities
 {
-    public class Review:BaseEntity
+    public class Review : BaseEntity
     {
         public string ReviewerName { get; set; }
         public int Rating { get; set; }

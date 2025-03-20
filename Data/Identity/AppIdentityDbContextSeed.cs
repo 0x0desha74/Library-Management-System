@@ -32,7 +32,7 @@ namespace Bookly.APIs.Data.Identity
                     UserName = "mustafa.elsayed",
                     PhoneNumber = "0110110110",
                 };
-                await userManager.CreateAsync(user,"P@ssword123");
+                await userManager.CreateAsync(user, "P@ssword123");
             }
 
         }

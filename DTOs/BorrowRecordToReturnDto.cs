@@ -1,6 +1,4 @@
-﻿using Bookly.APIs.Entities;
-
-namespace Bookly.APIs.DTOs
+﻿namespace Bookly.APIs.DTOs
 {
     public class BorrowRecordToReturnDto
     {
