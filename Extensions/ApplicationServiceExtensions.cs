@@ -2,8 +2,9 @@
 using Bookly.APIs.Helpers;
 using Bookly.APIs.Interfaces;
 using Bookly.APIs.Repositories;
+using Bookly.APIs.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.Design;
+
 
 namespace Bookly.APIs.Extensions
 {
@@ -13,7 +14,8 @@ namespace Bookly.APIs.Extensions
         {
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddAutoMapper(typeof(MappingProfiles));
-
+            services.AddScoped(typeof(IFineService), typeof(FineService));
+            services.AddScoped(typeof(IBorrowService), typeof(BorrowService));
 
 
             services.Configure<ApiBehaviorOptions>(options =>
