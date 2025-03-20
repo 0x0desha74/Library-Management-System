@@ -58,8 +58,8 @@ namespace Bookly.APIs.Controllers
             if (!result.Succeeded) return BadRequest(new ApiResponse(400));
             return Ok(new UserDto()
             {
-                DisplayName= user.DisplayName,
-                Email=user.Email,
+                DisplayName = user.DisplayName,
+                Email = user.Email,
                 Token = await _tokenService.CreateTokenAsync(user, _userManager)
             });
 
@@ -72,7 +72,7 @@ namespace Bookly.APIs.Controllers
         [HttpGet("profile")]
         public async Task<ActionResult<ProfileDto>> GetProfile()
         {
-             var email = User.FindFirstValue(ClaimTypes.Email);
+            var email = User.FindFirstValue(ClaimTypes.Email);
             var user = await _userManager.FindByEmailAsync(email);
             return Ok(new ProfileDto()
             {
@@ -99,17 +99,17 @@ namespace Bookly.APIs.Controllers
 
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("assign-role")]
+        [HttpPost("roles")]
         public async Task<ActionResult<string>> AssignRole(AssignRoleDto model)
         {
-            AppUser user=null;
+            AppUser user = null;
             if (!string.IsNullOrEmpty(model.Id))
                 user = await _userManager.FindByIdAsync(model.Id);
 
             if (!string.IsNullOrEmpty(model.Email))
                 user = await _userManager.FindByEmailAsync(model.Email);
 
-            if (user is null) return NotFound(new ApiResponse(404,"User not found"));
+            if (user is null) return NotFound(new ApiResponse(404, "User not found"));
 
             if (!await _roleManager.RoleExistsAsync(model.Role))
                 return BadRequest(new ApiResponse(400, "Role is not existed"));
@@ -121,21 +121,21 @@ namespace Bookly.APIs.Controllers
         }
 
 
-        [Authorize(Roles="Admin")]
-        [HttpGet("get-role")]
+        [Authorize(Roles = "Admin")]
+        [HttpGet("roles")]
         public async Task<ActionResult<RoleDto>> GetRoles(BaseRoleDto model)
         {
-            AppUser user=null;
+            AppUser user = null;
             if (!string.IsNullOrEmpty(model.Id))
                 user = await _userManager.FindByIdAsync(model.Id);
 
-            if (!string.IsNullOrEmpty(model.Email)) 
+            if (!string.IsNullOrEmpty(model.Email))
                 user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user is null) return NotFound(new ApiResponse(404, "User not found"));
 
             var roles = await _userManager.GetRolesAsync(user);
-            
+
             return Ok(new RoleDto()
             {
                 Email = user.Email,

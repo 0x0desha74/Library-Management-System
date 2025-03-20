@@ -22,6 +22,8 @@ namespace Bookly.APIs.Helpers
             CreateMap<BorrowRecordToReturnDto, BorrowRecord>().ReverseMap();
             CreateMap<FineToReturnDto, Fine>().ReverseMap();
             CreateMap<FineDto, Fine>().ReverseMap();
+            
+
 
         }
     }

@@ -16,6 +16,7 @@ namespace Bookly.APIs.Extensions
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddScoped(typeof(IFineService), typeof(FineService));
             services.AddScoped(typeof(IBorrowService), typeof(BorrowService));
+            services.AddScoped(typeof(IFavoriteService), typeof(FavoriteService));
 
 
             services.Configure<ApiBehaviorOptions>(options =>

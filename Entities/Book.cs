@@ -13,5 +13,6 @@
         public int AvailableCount { get; set; }
         public ICollection<Review> Reviews { get; set; }
         public ICollection<BorrowRecord> BorrowRecords { get; set; } = new List<BorrowRecord>();
+        public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
     }
 }
