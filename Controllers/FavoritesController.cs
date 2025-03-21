@@ -5,7 +5,6 @@ using Bookly.APIs.Error;
 using Bookly.APIs.Interfaces;
 using Bookly.APIs.Specifications;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -31,17 +30,14 @@ namespace Bookly.APIs.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Favorite>>> GetBookFavorites()
+        public async Task<ActionResult<IReadOnlyList<Favorite>>> GetFavorites()
         {
             var email = User.FindFirstValue(ClaimTypes.Email);
-            var user =await  _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(email);
             var favorites = await _favoriteService.GetFavoriteBooksAsync(user.Id);
             if (favorites is null) return NotFound(new ApiResponse(404));
             return Ok(favorites);
         }
-
-
-
 
         [Authorize]
         [HttpPost("{bookId}")]
@@ -55,19 +51,19 @@ namespace Bookly.APIs.Controllers
             if (BookAddedToFavorites is not null) return BadRequest(new ApiResponse(400, "Book is already added to your favorites list"));
             var spec = new BooksSpecification(bookId);
             var book = await _unitOfWork.Repository<Book>().GetEntityWithSpecAsync(spec);
-            if (book is null) return NotFound(new ApiResponse(404,"Book not found"));
-          
+            if (book is null) return NotFound(new ApiResponse(404, "Book not found"));
+
 
             var favorite = await _favoriteService.AddFavoriteBook(book, user.Id);
             if (favorite is null) return BadRequest(new ApiResponse(400));
-          
+
             return Ok(favorite);
 
         }
 
         [Authorize]
-       [HttpDelete("{bookId}")]
-       public async Task<ActionResult<ActionDoneSuccessfullyMessageDto>> DeleteFavoriteBook(int bookid)
+        [HttpDelete("{bookId}")]
+        public async Task<ActionResult<ActionDoneSuccessfullyMessageDto>> DeleteFavoriteBook(int bookid)
         {
             var email = User.FindFirstValue(ClaimTypes.Email);
             var user = await _userManager.FindByEmailAsync(email);

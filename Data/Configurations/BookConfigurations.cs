@@ -22,6 +22,10 @@ namespace Bookly.APIs.Data.Configurations
               .WithOne()
               .HasForeignKey(br => br.BookId)
               .OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(b => b.Favorites)
+              .WithOne()
+              .HasForeignKey(f => f.BookId)
+              .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

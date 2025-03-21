@@ -2,6 +2,7 @@
 using Bookly.APIs.DTOs;
 using Bookly.APIs.Entities;
 using Bookly.APIs.Error;
+using Bookly.APIs.Helpers;
 using Bookly.APIs.Interfaces;
 using Bookly.APIs.Specifications;
 using Microsoft.AspNetCore.Authorization;
@@ -20,12 +21,12 @@ namespace Bookly.APIs.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<AuthorToReturnDto>>> GetAuthors()
+        public async Task<ActionResult<IReadOnlyList<Pagination<AuthorToReturnDto>>>> GetAuthors([FromQuery]PaginationSpecParams specParams)
         {
-            var spec = new AuthorWithBooksSpecifications();
+            var spec = new AuthorWithBooksSpecifications(specParams);
             var authors = await _unitOfWork.Repository<Author>().GetAllWithSpecAsync(spec);
-            var mappedAuthors = _mapper.Map<IReadOnlyList<Author>, IReadOnlyList<AuthorToReturnDto>>(authors);
-            return Ok(mappedAuthors);
+            var data = _mapper.Map<IReadOnlyList<Author>, IReadOnlyList<AuthorToReturnDto>>(authors);
+            return Ok(new Pagination<AuthorToReturnDto>(specParams.PageIndex,specParams.PageSize, data.Count,data));
         }
 
         [HttpGet("{id}")]
@@ -89,17 +90,17 @@ namespace Bookly.APIs.Controllers
             return BadRequest(new ApiResponse(400));
         }
 
-
+        [Authorize]
         [HttpGet("{authorId}/books")]
-        public async Task<ActionResult<IReadOnlyList<BookToReturnDto>>> GetBooksForAuthor(int authorId)
+        public async Task<ActionResult<IReadOnlyList<BookToReturnDto>>> GetBooksForAuthor(int authorId, [FromQuery] PaginationSpecParams specParams)
         {
-            var spec = new BooksOfAuthorSpecifications(authorId);
+            var spec = new BooksOfAuthorSpecifications(authorId,specParams);
             var books = await _unitOfWork.Repository<Book>().GetAllWithSpecAsync(spec);
             if (books is null) return NotFound(new ApiResponse(404));
-            var mappedBooks = _mapper.Map<IReadOnlyList<Book>, IReadOnlyList<BookToReturnDto>>(books);
-            return Ok(mappedBooks);
+            var data = _mapper.Map<IReadOnlyList<Book>, IReadOnlyList<BookToReturnDto>>(books);
+            return Ok(new Pagination<BookToReturnDto>(specParams.PageIndex,specParams.PageSize,data.Count,data));
         }
-
+        [Authorize]
         //Get book by id for specific author
         [HttpGet("{authorId}/books/{bookId}")]
         public async Task<ActionResult<BookToReturnDto>> GetBookForAuthor(int authorId, int bookId)
@@ -109,6 +110,7 @@ namespace Bookly.APIs.Controllers
             if (book is null) return NotFound(new ApiResponse(404));
             return Ok(_mapper.Map<Book, BookToReturnDto>(book));
         }
+
         [Authorize]
         //update book by id for a specific author
         [HttpPut("{authorId}/books/{bookId}")]

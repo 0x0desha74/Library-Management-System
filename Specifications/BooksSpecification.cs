@@ -1,18 +1,19 @@
 ﻿using Bookly.APIs.Entities;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Bookly.APIs.Specifications
 {
     public class BooksSpecification : BaseSpecifications<Book>
     {
-        public BooksSpecification(int? authorId, string? genre)
+        public BooksSpecification(BooksSpecParams specParams)
             : base(b =>
-                (authorId == null || (b.Author != null && b.Author.Id == authorId.Value)) &&
-        (string.IsNullOrEmpty(genre) || (b.Genre != null && b.Genre == genre))
+                (specParams.AuthorId == null || (b.Author != null && b.Author.Id == specParams.AuthorId.Value)) &&
+        (string.IsNullOrEmpty(specParams.Genre) || (b.Genre != null && b.Genre == specParams.Genre))
             )
         {
             Includes.Add(b => b.Author);
             Includes.Add(b => b.Reviews);
-
+            ApplyPagination(specParams.PageSize *(specParams.PageIndex - 1) , specParams.PageSize);
         }
         public BooksSpecification(int id) : base(b => b.Id == id)
         {

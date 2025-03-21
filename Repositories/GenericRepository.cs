@@ -57,5 +57,10 @@ namespace Bookly.APIs.Repositories
         {
             return SpecificationEvaluator<T>.GetQuery(_dbContext.Set<T>(), spec);
         }
+
+        //public int CountByIdAsync(int id)
+        //{
+        //  var count = _dbContext.
+        //}
     }
 }

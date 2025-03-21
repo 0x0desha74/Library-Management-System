@@ -2,6 +2,7 @@
 using Bookly.APIs.DTOs;
 using Bookly.APIs.Entities;
 using Bookly.APIs.Error;
+using Bookly.APIs.Helpers;
 using Bookly.APIs.Interfaces;
 using Bookly.APIs.Specifications;
 using Microsoft.AspNetCore.Authorization;
@@ -19,22 +20,23 @@ namespace Bookly.APIs.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly IFineService _fineService;
         private readonly IBorrowService _borrowService;
-        public BooksController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IFineService fineServie, IBorrowService borrowService)
+        public BooksController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IFineService fineService, IBorrowService borrowService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
-            _fineService = fineServie;
+            _fineService = fineService;
             _borrowService = borrowService;
         }
 
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Book>>> GetBooks(int? authorId, string? genre)
+        public async Task<ActionResult<IReadOnlyList<Pagination<BookToReturnDto>>>> GetBooks([FromQuery] BooksSpecParams specParams)
         {
-            var spec = new BooksSpecification(authorId, genre);
+            var spec = new BooksSpecification(specParams);
             var books = await _unitOfWork.Repository<Book>().GetAllWithSpecAsync(spec);
-            return Ok(_mapper.Map<IReadOnlyList<Book>, IReadOnlyList<BookToReturnDto>>(books));
+            var data = _mapper.Map<IReadOnlyList<Book>, IReadOnlyList<BookToReturnDto>>(books);
+            return Ok(new Pagination<BookToReturnDto>(specParams.PageIndex,specParams.PageSize,data.Count,data));
         }
 
 
@@ -77,15 +79,16 @@ namespace Bookly.APIs.Controllers
             return Ok(new ActionDoneSuccessfullyMessageDto("Book is deleted successfully"));
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpGet("{id}/reviews")]
-        public async Task<ActionResult<IReadOnlyList<Review>>> GetReviews(int id)
+        public async Task<ActionResult<IReadOnlyList<Pagination<Review>>>> GetReviews(int id,[FromQuery] PaginationSpecParams specParams)
         {
-            var spec = new ReviewSpecifications(id);
+            var spec = new ReviewSpecifications(id,specParams);
             var reviews = await _unitOfWork.Repository<Review>().GetAllWithSpecAsync(spec);
             if (reviews is null) return NotFound(new ApiResponse(404));
-            return Ok(reviews);
+            return Ok(new Pagination<Review>(specParams.PageIndex, specParams.PageSize,reviews.Count,reviews));
         }
+
         [Authorize]
         [HttpPost("{bookId}/reviews")]
         public async Task<ActionResult<Review>> CreateReview(int bookId, ReviewDto model)
@@ -151,12 +154,13 @@ namespace Bookly.APIs.Controllers
 
 
         [HttpGet("{bookId}/borrow-records")]
-        public async Task<ActionResult<IReadOnlyList<BorrowRecordToReturnDto>>> GetBorrowRecords(int bookId)
+        public async Task<ActionResult<IReadOnlyList<Pagination<BorrowRecordToReturnDto>>>> GetBorrowRecords(int bookId,PaginationSpecParams specParams)
         {
-            var spec = new BorrowRecordSpecifications(bookId);
+            var spec = new BorrowRecordSpecifications(bookId,specParams);
             var records = await _unitOfWork.Repository<BorrowRecord>().GetAllWithSpecAsync(spec);
             if (records is null) return BadRequest(new ApiResponse(404));
-            return Ok(_mapper.Map<IReadOnlyList<BorrowRecord>, IReadOnlyList<BorrowRecordToReturnDto>>(records));
+            var data = _mapper.Map<IReadOnlyList<BorrowRecord>, IReadOnlyList<BorrowRecordToReturnDto>>(records);
+            return Ok(new Pagination<BorrowRecordToReturnDto>(specParams.PageIndex, specParams.PageSize, data.Count,data));
         }
 
         [Authorize(Roles = "Admin")]

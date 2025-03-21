@@ -22,6 +22,6 @@ namespace Bookly.APIs.Data
         public DbSet<Author> Authors { get; set; }
         public DbSet<BorrowRecord> BorrowRecords { get; set; }
         public DbSet<Fine> Fines { get; set; }
-        public DbSet<Favorite> Favorites{ get; set; }
+        public DbSet<Favorite> Favorites { get; set; }
     }
 }

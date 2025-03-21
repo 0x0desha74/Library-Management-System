@@ -10,6 +10,12 @@ namespace Bookly.APIs.Specifications
 
         }
 
+        public BorrowRecordSpecifications(int bookId,PaginationSpecParams specParams) : base(br => br.BookId == bookId)
+        {
+            Includes.Add(br => br.Fine);
+            ApplyPagination((specParams.PageIndex - 1) * specParams.PageSize, specParams.PageSize);
+
+        }
         public BorrowRecordSpecifications(int bookId) : base(br => br.BookId == bookId)
         {
             Includes.Add(br => br.Fine);

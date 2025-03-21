@@ -16,25 +16,25 @@ namespace Bookly.APIs.Services
 
         public async Task<FavoriteToReturnDto> AddFavoriteBook(Book book, string userId)
         {
-            var  favorite = new Favorite()
+            var favorite = new Favorite()
             {
-                bookId = book.Id,
+                BookId = book.Id,
                 UserId = userId
             };
 
-           await  _unitOfWork.Repository<Favorite>().AddAsync(favorite);
+            await _unitOfWork.Repository<Favorite>().AddAsync(favorite);
             var result = await _unitOfWork.Complete();
             if (result > 0)
             {
-               
+
                 var mappedFavorite = new FavoriteToReturnDto()
                 {
-                    BookId = favorite.bookId,
+                    BookId = favorite.BookId,
                     CreateAt = favorite.CreatedAt,
                     Author = book.Author.Name,
                     Title = book.Title
                 };
-            return mappedFavorite;
+                return mappedFavorite;
             }
             return null;
         }

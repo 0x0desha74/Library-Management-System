@@ -14,6 +14,8 @@ namespace Bookly.APIs.Interfaces
         Task AddAsync(T entity);
         void Update(T entity);
         void Delete(T entity);
+        //int CountByIdAsync(int id);
+       
 
     }
 }
