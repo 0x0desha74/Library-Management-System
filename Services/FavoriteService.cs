@@ -49,10 +49,10 @@ namespace Bookly.APIs.Services
             return result > 0 ? true : false;
         }
 
-        public async Task<IReadOnlyList<Favorite>> GetFavoriteBooksAsync(string userId)
+        public async Task<IReadOnlyList<Favorite>> GetFavoriteBooksAsync(string userId,PaginationSpecParams specParams)
         {
 
-            var spec = new FavoritesSpecifications(userId);
+            var spec = new FavoritesSpecifications(userId,specParams);
             var favorites = await _unitOfWork.Repository<Favorite>().GetAllWithSpecAsync(spec);
             if (favorites is null) return null;
             return favorites;

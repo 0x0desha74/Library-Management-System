@@ -2,6 +2,7 @@
 using Bookly.APIs.DTOs;
 using Bookly.APIs.Entities;
 using Bookly.APIs.Error;
+using Bookly.APIs.Helpers;
 using Bookly.APIs.Interfaces;
 using Bookly.APIs.Specifications;
 using Microsoft.AspNetCore.Authorization;
@@ -30,13 +31,13 @@ namespace Bookly.APIs.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Favorite>>> GetFavorites()
+        public async Task<ActionResult<IReadOnlyList<Pagination<Favorite>>>> GetFavorites([FromQuery]PaginationSpecParams specParams)
         {
             var email = User.FindFirstValue(ClaimTypes.Email);
             var user = await _userManager.FindByEmailAsync(email);
-            var favorites = await _favoriteService.GetFavoriteBooksAsync(user.Id);
+            var favorites = await _favoriteService.GetFavoriteBooksAsync(user.Id,specParams);
             if (favorites is null) return NotFound(new ApiResponse(404));
-            return Ok(favorites);
+            return Ok(new Pagination<Favorite>(specParams.PageIndex,specParams.PageSize,favorites.Count,favorites));
         }
 
         [Authorize]
