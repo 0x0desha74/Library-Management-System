@@ -177,7 +177,7 @@ namespace Bookly.APIs.Controllers
             var count = await _unitOfWork.Repository<Fine>().GetCountWithSpecAsync(spec);
             if (fines is null) return NotFound(new ApiResponse(404, "No fines found for this book"));
             var data = _mapper.Map<IReadOnlyList<Fine>, IReadOnlyList<FineToReturnDto>>(fines);
-            return Ok(new Pagination<FineToReturnDto>(specParams.PageIndex,specParams.PageSize,count,data);
+            return Ok(new Pagination<FineToReturnDto>(specParams.PageIndex,specParams.PageSize,count,data));
         }
 
 

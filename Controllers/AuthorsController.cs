@@ -20,15 +20,19 @@ namespace Bookly.APIs.Controllers
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<Pagination<AuthorToReturnDto>>>> GetAuthors([FromQuery]PaginationSpecParams specParams)
         {
             var spec = new AuthorWithBooksSpecifications(specParams);
             var authors = await _unitOfWork.Repository<Author>().GetAllWithSpecAsync(spec);
+            var countSpec = new AuthorCountSpecifications();
+            var count = await _unitOfWork.Repository<Author>().GetCountWithSpecAsync(countSpec);
             var data = _mapper.Map<IReadOnlyList<Author>, IReadOnlyList<AuthorToReturnDto>>(authors);
-            return Ok(new Pagination<AuthorToReturnDto>(specParams.PageIndex,specParams.PageSize, data.Count,data));
+            return Ok(new Pagination<AuthorToReturnDto>(specParams.PageIndex,specParams.PageSize, count,data));
         }
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<AuthorToReturnDto>> GetAuthor(int id)
         {
@@ -96,9 +100,11 @@ namespace Bookly.APIs.Controllers
         {
             var spec = new BooksOfAuthorSpecifications(authorId,specParams);
             var books = await _unitOfWork.Repository<Book>().GetAllWithSpecAsync(spec);
+            var countSpec = new BooksOfAuthorSpecifications(authorId);
+            var count = await _unitOfWork.Repository<Book>().GetCountWithSpecAsync(countSpec);
             if (books is null) return NotFound(new ApiResponse(404));
             var data = _mapper.Map<IReadOnlyList<Book>, IReadOnlyList<BookToReturnDto>>(books);
-            return Ok(new Pagination<BookToReturnDto>(specParams.PageIndex,specParams.PageSize,data.Count,data));
+            return Ok(new Pagination<BookToReturnDto>(specParams.PageIndex,specParams.PageSize,count,data));
         }
         [Authorize]
         //Get book by id for specific author
@@ -111,7 +117,7 @@ namespace Bookly.APIs.Controllers
             return Ok(_mapper.Map<Book, BookToReturnDto>(book));
         }
 
-        [Authorize]
+        [Authorize(Roles="Admin")]
         //update book by id for a specific author
         [HttpPut("{authorId}/books/{bookId}")]
         public async Task<ActionResult<BookToReturnDto>> Edit(int authorId, int bookId, BookDto model)
@@ -134,7 +140,7 @@ namespace Bookly.APIs.Controllers
             return BadRequest(new ApiResponse(400));
         }
 
-        [Authorize]
+        [Authorize(Roles="Admin")]
         [HttpDelete("{authorId}/books/{bookId}")]
         public async Task<ActionResult<ActionDoneSuccessfullyMessageDto>> Delete(int authorId, int bookId)
         {

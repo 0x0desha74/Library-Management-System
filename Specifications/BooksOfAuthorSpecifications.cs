@@ -14,5 +14,9 @@ namespace Bookly.APIs.Specifications
         {
             Includes.Add(b => b.Author);
         }
+        public BooksOfAuthorSpecifications(int authorId) : base(b => b.AuthorId == authorId)
+        {
+
+        }
     }
 }

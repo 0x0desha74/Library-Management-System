@@ -36,8 +36,10 @@ namespace Bookly.APIs.Controllers
             var email = User.FindFirstValue(ClaimTypes.Email);
             var user = await _userManager.FindByEmailAsync(email);
             var favorites = await _favoriteService.GetFavoriteBooksAsync(user.Id,specParams);
+            var countSpec = new FavoritesSpecifications(user.Id);
+            var count = await _unitOfWork.Repository<Favorite>().GetCountWithSpecAsync(countSpec); 
             if (favorites is null) return NotFound(new ApiResponse(404));
-            return Ok(new Pagination<Favorite>(specParams.PageIndex,specParams.PageSize,favorites.Count,favorites));
+            return Ok(new Pagination<Favorite>(specParams.PageIndex,specParams.PageSize,count,favorites));
         }
 
         [Authorize]

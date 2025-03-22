@@ -13,5 +13,11 @@ namespace Bookly.APIs.Specifications
         {
             //Includes.Add(f => f.Book);
         }
+
+        //For Count Specifications 
+        public FavoritesSpecifications(string userId):base(f=>f.UserId == userId)
+        {
+
+        }
     }
 }
