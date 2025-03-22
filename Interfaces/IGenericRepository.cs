@@ -11,11 +11,11 @@ namespace Bookly.APIs.Interfaces
         Task<T> GetByIdAsync(int id);
         Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecification<T> spec);
         Task<T> GetEntityWithSpecAsync(ISpecification<T> spec);
+        Task<int> GetCountWithSpecAsync(ISpecification<T> spec);
         Task AddAsync(T entity);
         void Update(T entity);
         void Delete(T entity);
-        //int CountByIdAsync(int id);
-       
+
 
     }
 }

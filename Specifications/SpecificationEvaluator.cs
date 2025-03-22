@@ -12,6 +12,7 @@ namespace Bookly.APIs.Specifications
             if (spec.Criteria is not null)
                 query = query.Where(spec.Criteria);
 
+
             
             
             if (spec.IsPaginationEnabled)

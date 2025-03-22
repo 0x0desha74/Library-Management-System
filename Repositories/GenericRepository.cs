@@ -34,6 +34,10 @@ namespace Bookly.APIs.Repositories
         {
             return await ApplySpecification(spec).FirstOrDefaultAsync();
         }
+        public async Task<int> GetCountWithSpecAsync(ISpecification<T> spec)
+        {
+            return await ApplySpecification(spec).CountAsync();                        
+        }
 
         public async Task AddAsync(T entity)
         {
@@ -58,9 +62,6 @@ namespace Bookly.APIs.Repositories
             return SpecificationEvaluator<T>.GetQuery(_dbContext.Set<T>(), spec);
         }
 
-        //public int CountByIdAsync(int id)
-        //{
-        //  var count = _dbContext.
-        //}
+
     }
 }

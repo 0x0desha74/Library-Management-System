@@ -34,9 +34,11 @@ namespace Bookly.APIs.Controllers
         public async Task<ActionResult<IReadOnlyList<Pagination<BookToReturnDto>>>> GetBooks([FromQuery] BooksSpecParams specParams)
         {
             var spec = new BooksSpecification(specParams);
+            var countSpec = new BooksWithFilterationForCountSpecification(specParams);
             var books = await _unitOfWork.Repository<Book>().GetAllWithSpecAsync(spec);
+            var count = await _unitOfWork.Repository<Book>().GetCountWithSpecAsync(countSpec);
             var data = _mapper.Map<IReadOnlyList<Book>, IReadOnlyList<BookToReturnDto>>(books);
-            return Ok(new Pagination<BookToReturnDto>(specParams.PageIndex,specParams.PageSize,data.Count,data));
+            return Ok(new Pagination<BookToReturnDto>(specParams.PageIndex, specParams.PageSize, count, data));
         }
 
 
@@ -81,12 +83,13 @@ namespace Bookly.APIs.Controllers
 
         [Authorize]
         [HttpGet("{id}/reviews")]
-        public async Task<ActionResult<IReadOnlyList<Pagination<Review>>>> GetReviews(int id,[FromQuery] PaginationSpecParams specParams)
+        public async Task<ActionResult<IReadOnlyList<Pagination<Review>>>> GetReviews(int id, [FromQuery] PaginationSpecParams specParams)
         {
-            var spec = new ReviewSpecifications(id,specParams);
+            var spec = new ReviewSpecifications(id, specParams);
             var reviews = await _unitOfWork.Repository<Review>().GetAllWithSpecAsync(spec);
+            var count = await _unitOfWork.Repository<Review>().GetCountWithSpecAsync(spec);
             if (reviews is null) return NotFound(new ApiResponse(404));
-            return Ok(new Pagination<Review>(specParams.PageIndex, specParams.PageSize,reviews.Count,reviews));
+            return Ok(new Pagination<Review>(specParams.PageIndex, specParams.PageSize, count, reviews));
         }
 
         [Authorize]
@@ -152,25 +155,29 @@ namespace Bookly.APIs.Controllers
             return Ok(new ActionDoneSuccessfullyMessageDto("Book is available"));
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet("{bookId}/borrow-records")]
-        public async Task<ActionResult<IReadOnlyList<Pagination<BorrowRecordToReturnDto>>>> GetBorrowRecords(int bookId,PaginationSpecParams specParams)
+        public async Task<ActionResult<IReadOnlyList<Pagination<BorrowRecordToReturnDto>>>> GetBorrowRecords(int bookId, [FromQuery] PaginationSpecParams specParams)
         {
-            var spec = new BorrowRecordSpecifications(bookId,specParams);
+            var spec = new BorrowRecordSpecifications(bookId, specParams);
+            var countSpec = new BorrowRecordsCountSpecification(bookId);
             var records = await _unitOfWork.Repository<BorrowRecord>().GetAllWithSpecAsync(spec);
+            var count = await _unitOfWork.Repository<BorrowRecord>().GetCountWithSpecAsync(countSpec);
             if (records is null) return BadRequest(new ApiResponse(404));
             var data = _mapper.Map<IReadOnlyList<BorrowRecord>, IReadOnlyList<BorrowRecordToReturnDto>>(records);
-            return Ok(new Pagination<BorrowRecordToReturnDto>(specParams.PageIndex, specParams.PageSize, data.Count,data));
+            return Ok(new Pagination<BorrowRecordToReturnDto>(specParams.PageIndex, specParams.PageSize, count, data));
         }
 
         [Authorize(Roles = "Admin")]
         [HttpGet("{bookId}/fines")]
-        public async Task<ActionResult<IReadOnlyList<FineToReturnDto>>> GetFines(int bookId)
+        public async Task<ActionResult<IReadOnlyList<Pagination<FineToReturnDto>>>> GetFines(int bookId, [FromQuery] PaginationSpecParams specParams)
         {
-            var spec = new FineSpecifications(bookId);
+            var spec = new FineSpecifications(bookId, specParams);
             var fines = await _unitOfWork.Repository<Fine>().GetAllWithSpecAsync(spec);
+            var count = await _unitOfWork.Repository<Fine>().GetCountWithSpecAsync(spec);
             if (fines is null) return NotFound(new ApiResponse(404, "No fines found for this book"));
-            return Ok(_mapper.Map<IReadOnlyList<Fine>, IReadOnlyList<FineToReturnDto>>(fines));
+            var data = _mapper.Map<IReadOnlyList<Fine>, IReadOnlyList<FineToReturnDto>>(fines);
+            return Ok(new Pagination<FineToReturnDto>(specParams.PageIndex,specParams.PageSize,count,data);
         }
 
 

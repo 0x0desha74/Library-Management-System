@@ -9,9 +9,9 @@ namespace Bookly.APIs.Specifications
 
         }
 
-        public FineSpecifications(int bookId) : base(f => f.BookId == bookId)
+        public FineSpecifications(int bookId ,PaginationSpecParams specParams) : base(f => f.BookId == bookId)
         {
-
+            ApplyPagination((specParams.PageIndex - 1) * specParams.PageSize, specParams.PageSize);
         }
     }
 }
