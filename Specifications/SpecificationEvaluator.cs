@@ -12,19 +12,38 @@ namespace Bookly.APIs.Specifications
             if (spec.Criteria is not null)
                 query = query.Where(spec.Criteria);
 
+            if (spec.OrderBy is not null)
+                query = query.OrderBy(spec.OrderBy);
 
-            
-            
+
+            if (spec.OrderByDescending is not null)
+                query = query.OrderByDescending(spec.OrderByDescending);
+
+            if (spec.Top > 0)
+                query = query.Take(spec.Top);
+
+            //if (spec.OrderByDescending is not null && spec.Top > 0)
+            //{
+            //    query = query.OrderByDescending(spec.OrderByDescending);
+            //    query = query.Take(spec.Top);
+            //}
+            //else
+            //    query = query.OrderByDescending(spec.OrderByDescending);
+
+
+
+
+
+
             if (spec.IsPaginationEnabled)
-            {
-            query = query.Skip(spec.Skip).Take(spec.Take);
-              
-            }
+                query = query.Skip(spec.Skip).Take(spec.Take);
 
             
-            
+
+
+
             query = spec.Includes.Aggregate(query, (currentQuery, includeExpression) => currentQuery.Include(includeExpression));
-           
+
 
             return query;
         }

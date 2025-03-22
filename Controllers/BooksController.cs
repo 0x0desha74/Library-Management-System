@@ -50,6 +50,19 @@ namespace Bookly.APIs.Controllers
             return book is not null ? Ok(_mapper.Map<Book, BookToReturnDto>(book)) : NotFound(new ApiResponse(404));
         }
 
+        [HttpGet("top")]
+        public async Task<ActionResult<IReadOnlyList<Pagination<BookToReturnDto>>>> GetTopBooks(int top,[FromQuery]PaginationSpecParams specParams)
+        {
+            var spec = new TopBooksSpecifications(top);
+            var TopBooks = await _unitOfWork.Repository<Book>().GetAllWithSpecAsync(spec);
+            var data = _mapper.Map<IReadOnlyList<Book>, IReadOnlyList<BookToReturnDto>>(TopBooks);
+            if (TopBooks is null) return NotFound(new ApiResponse(404));
+            return Ok(new Pagination<BookToReturnDto>(specParams.PageIndex, specParams.PageSize, TopBooks.Count, data));
+        }
+
+
+
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<BookDto>> Create(BookDto model)

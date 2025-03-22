@@ -10,7 +10,9 @@ namespace Bookly.APIs.Specifications
         public int Skip { get; set; }
         public int Take { get; set; }
         public bool IsPaginationEnabled { get; set; }
-
+        public Expression<Func<T,object>> OrderBy { get; set; }
+        public Expression<Func<T, object>> OrderByDescending { get; set; }
+        public int Top { get; set; }
         public BaseSpecifications()
         {
             
@@ -22,7 +24,24 @@ namespace Bookly.APIs.Specifications
 
         }
 
+        public void AddOrderByAsc(Expression<Func<T, object>> orderByAscExpression)
+        {
+            OrderBy = orderByAscExpression;
+        }
 
+        public void ApplyTopRecords(int top,Expression<Func<T,object>> orderByDescExpression)
+        {
+            OrderByDescending = orderByDescExpression;
+            Top = top;
+            ApplyPagination(0, top);
+        }
+
+
+
+        public void AddOrderByDescending(Expression<Func<T, object>> orderByDescExpression)
+        {
+            OrderByDescending = orderByDescExpression;
+        }
         public void ApplyPagination(int skip,int take)
         {
             IsPaginationEnabled = true;

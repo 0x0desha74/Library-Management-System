@@ -5,5 +5,7 @@
        
         public string? Genre { get; set; }
         public int? AuthorId { get; set; }
+        public string? sort { get; set; }
+        //public int? Top { get; set; }
     }
 }
