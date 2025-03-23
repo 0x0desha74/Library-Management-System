@@ -4,7 +4,13 @@ namespace Bookly.APIs.Specifications
 {
     public class BooksOfAuthorSpecifications : BaseSpecifications<Book>
     {
-        public BooksOfAuthorSpecifications(int authorId,PaginationSpecParams specParams) : base(b => b.AuthorId == authorId)
+        public BooksOfAuthorSpecifications(int authorId, BooksSpecParams specParams)
+            : base(
+                  b =>
+                    (string.IsNullOrEmpty(specParams.Search) || b.Title.ToLower().Contains(specParams.Search)) &&
+
+                  b.AuthorId == authorId
+                  )
         {
             Includes.Add(b => b.Author);
             ApplyPagination((specParams.PageIndex - 1) * specParams.PageSize, specParams.PageSize);

@@ -23,7 +23,7 @@ namespace Bookly.APIs.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Pagination<AuthorToReturnDto>>>> GetAuthors([FromQuery]PaginationSpecParams specParams)
+        public async Task<ActionResult<IReadOnlyList<Pagination<AuthorToReturnDto>>>> GetAuthors([FromQuery] AuthorSpecParams specParams)
         {
             var spec = new AuthorWithBooksSpecifications(specParams);
             var authors = await _unitOfWork.Repository<Author>().GetAllWithSpecAsync(spec);
@@ -96,7 +96,7 @@ namespace Bookly.APIs.Controllers
 
         [Authorize]
         [HttpGet("{authorId}/books")]
-        public async Task<ActionResult<IReadOnlyList<BookToReturnDto>>> GetBooksForAuthor(int authorId, [FromQuery] PaginationSpecParams specParams)
+        public async Task<ActionResult<IReadOnlyList<BookToReturnDto>>> GetBooksForAuthor(int authorId, [FromQuery] BooksSpecParams specParams)
         {
             var spec = new BooksOfAuthorSpecifications(authorId,specParams);
             var books = await _unitOfWork.Repository<Book>().GetAllWithSpecAsync(spec);
