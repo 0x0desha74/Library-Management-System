@@ -8,6 +8,7 @@ namespace Bookly.APIs.Specifications
     {
         public BooksSpecification(BooksSpecParams specParams)
             : base(b =>
+                         (string.IsNullOrEmpty(specParams.Search) || b.Title.ToLower().Contains(specParams.Search)) &&
                 (specParams.AuthorId == null || (b.Author != null && b.Author.Id == specParams.AuthorId.Value)) &&
         (string.IsNullOrEmpty(specParams.Genre) || (b.Genre != null && b.Genre == specParams.Genre))
             )
@@ -17,12 +18,7 @@ namespace Bookly.APIs.Specifications
 
             AddOrderByAsc(b => b.Title);
 
-            //if (specParams.Top.HasValue)
-            //{
-            //    Includes.Add(b => b.Favorites);
-            //    AddOrderByDescending(b => b.Favorites.Count);
-            //    Top = specParams.Top.Value;
-            //}
+          
             if (!string.IsNullOrEmpty(specParams.sort))
             {
 
