@@ -1,4 +1,4 @@
-# 📚 Library Management System API
+# 📚 Bookly.APIs
 
 A **scalable & high-performance** RESTful API for managing a library system. This API efficiently handles user authentication, book management, borrowing, and returns while ensuring security, maintainability, and optimized performance.
 
